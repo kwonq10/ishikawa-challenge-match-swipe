@@ -378,7 +378,7 @@ header {
       </div>
       <div class="top-cta">
         <button class="btn btn-primary" onclick="startQuiz()">診断をはじめる →</button>
-        <div class="top-cta-note">4問の質問に答えるとおすすめが表示されます</div>
+        <div class="top-cta-note">5問の質問に答えるとおすすめが表示されます</div>
         <button class="top-fav-link" onclick="openFavModal()">⭐ 気になるリストを見る</button>
       </div>
     </div>
@@ -433,6 +433,7 @@ header {
         <div class="result-label">あなたのタイプ</div>
         <div class="result-type" id="resultType"></div>
         <div class="result-desc" id="resultDesc"></div>
+        <div id="resultGradeNote" style="margin-top:14px;font-size:13px;color:var(--violet);font-weight:700;background:var(--soft);border-radius:10px;padding:10px 14px;display:none"></div>
       </div>
       <div class="result-actions">
         <button class="btn btn-primary" onclick="goToSwipe()">おすすめを見る →</button>
@@ -550,11 +551,24 @@ let quizStep      = 0;
 const quizAnswers = {};
 let diagType      = null;
 let diagArea      = 'any';
+let diagGrade     = 'other';
 
 /* ============================================================
    QUIZ DATA
 ============================================================ */
 const QUESTIONS = [
+  {
+    id: 'grade',
+    q: 'あなたの現在の年次を教えてください',
+    opts: [
+      { v: 'g1',    label: '大学1年生',        icon: '🌱' },
+      { v: 'g2',    label: '大学2年生',        icon: '📗' },
+      { v: 'g3',    label: '大学3年生',        icon: '🎯' },
+      { v: 'g4',    label: '大学4年生',        icon: '🎓' },
+      { v: 'grad',  label: '大学院生',         icon: '🔬' },
+      { v: 'other', label: 'その他・社会人学生', icon: '💼' },
+    ]
+  },
   {
     id: 'field',
     q: '興味がある分野はどれですか？',
@@ -629,6 +643,26 @@ const AREA_KWS = {
   any:      [],
 };
 
+/* 年次ごとの優先キーワード（スコア +1） */
+const GRADE_KWS = {
+  g1:    ['イベント', 'ボランティア', '体験', '短期', '初心者', '歓迎', '見学', '参加', '1日'],
+  g2:    ['プロジェクト', '地域活動', '実践', 'インターン', '短期', 'チーム', '地域'],
+  g3:    ['長期', 'インターン', '実務', '就活', 'キャリア', 'マーケティング', '開発', '実績'],
+  g4:    ['実務', '即戦力', '成果', '事業', '企画', '長期', 'プロジェクト'],
+  grad:  ['研究', '開発', '分析', '専門', 'DX', 'データ', 'AI', '調査', '実験'],
+  other: ['柔軟', '社会人', '経験', '副業', 'スキルアップ', '自由', '週末'],
+};
+
+/* 年次ごとの診断結果コメント */
+const GRADE_NOTES = {
+  g1:    'まずは短期・体験型の挑戦から始めやすい時期です。',
+  g2:    '実践型プロジェクトや地域活動で経験を積みやすい時期です。',
+  g3:    '就活や将来のキャリアに直結する実践経験を意識したい時期です。',
+  g4:    '卒業前に成果を出せる実践的な案件が向いています。',
+  grad:  '専門性を活かして、開発・調査・企画系の挑戦と相性が良いです。',
+  other: '経験を活かせる柔軟な案件を優先しています。',
+};
+
 function calcDiagType(ans) {
   const f = ans.field || '';
   if (f === 'it')        return 'it';
@@ -639,7 +673,7 @@ function calcDiagType(ans) {
   return 'volunteer';
 }
 
-function scoreSource(src, typeKws, areaKws) {
+function scoreSource(src, typeKws, areaKws, gradeKws) {
   const text = [
     src.title, src.name, src.type, src.category,
     src.description, src.shortDescription, src.gain,
@@ -649,16 +683,18 @@ function scoreSource(src, typeKws, areaKws) {
     ...(Array.isArray(src.regions) ? src.regions : []),
   ].filter(Boolean).join(' ');
   let s = 0;
-  for (const kw of typeKws) { if (text.includes(kw)) s += 1; }
-  for (const kw of areaKws) { if (text.includes(kw)) s += 2; }
+  for (const kw of typeKws)  { if (text.includes(kw)) s += 1; }
+  for (const kw of areaKws)  { if (text.includes(kw)) s += 2; }
+  for (const kw of gradeKws) { if (text.includes(kw)) s += 1; }
   return s;
 }
 
-function sortSources(list, type, areaChoice) {
+function sortSources(list, type, areaChoice, grade) {
   const tKws = TYPE_KWS[type] || [];
   const aKws = areaChoice === 'any' ? [] : (AREA_KWS[areaChoice] || []);
-  if (!tKws.length && !aKws.length) return list;
-  return [...list].sort((a, b) => scoreSource(b, tKws, aKws) - scoreSource(a, tKws, aKws));
+  const gKws = GRADE_KWS[grade] || [];
+  if (!tKws.length && !aKws.length && !gKws.length) return list;
+  return [...list].sort((a, b) => scoreSource(b, tKws, aKws, gKws) - scoreSource(a, tKws, aKws, gKws));
 }
 
 /* ============================================================
@@ -1100,12 +1136,21 @@ function selectOption(qid, value, el) {
 }
 
 function showResult() {
-  diagType = calcDiagType(quizAnswers);
-  diagArea = quizAnswers.area || 'any';
+  diagType  = calcDiagType(quizAnswers);
+  diagArea  = quizAnswers.area  || 'any';
+  diagGrade = quizAnswers.grade || 'other';
   const t = DIAG_TYPES[diagType];
   document.getElementById('resultIcon').textContent = t.icon;
   document.getElementById('resultType').textContent = t.label;
   document.getElementById('resultDesc').textContent = t.desc;
+  const noteEl  = document.getElementById('resultGradeNote');
+  const noteText = GRADE_NOTES[diagGrade] || '';
+  if (noteText) {
+    noteEl.textContent = '💡 ' + noteText;
+    noteEl.style.display = '';
+  } else {
+    noteEl.style.display = 'none';
+  }
   showScreen('screen-result');
 }
 
@@ -1119,7 +1164,7 @@ async function goToSwipe() {
   }
   if (sourcesError)          { showScreen('screen-error'); return; }
   if (!allSources.length)    { showScreen('screen-empty'); return; }
-  sources      = sortSources(allSources, diagType || 'volunteer', diagArea || 'any');
+  sources      = sortSources(allSources, diagType || 'volunteer', diagArea || 'any', diagGrade || 'other');
   currentIndex = 0;
   renderCard(sources[0], 0, sources.length);
   showScreen('screen-swipe');
