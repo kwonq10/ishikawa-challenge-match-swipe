@@ -9,14 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@600;800&display=swap" rel="stylesheet" />
 <style>
 :root {
-  --bg: #0c1a30;
   --ink: #16213a;
   --muted: #637088;
   --violet: #1763d8;
   --violet2: #3d9bff;
   --coral: #ff7a18;
-  --amber: #ffc24b;
-  --card: #ffffff;
   --line: #e3edf9;
   --soft: #eef4fc;
   --grad: linear-gradient(120deg, #1763d8 0%, #2b8fff 100%);
@@ -24,22 +21,16 @@
   --shadow-sm: 0 6px 18px -10px rgba(20,74,150,.28);
   --shadow: 0 22px 50px -24px rgba(20,74,150,.40);
   --shadow-lg: 0 40px 90px -36px rgba(20,74,150,.52);
-  --radius: 22px;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   font-family: "Noto Sans JP", system-ui, sans-serif;
-  color: var(--ink);
-  background: #f6faff;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: .01em;
-  min-height: 100vh;
+  color: var(--ink); background: #f6faff;
+  line-height: 1.7; -webkit-font-smoothing: antialiased;
+  letter-spacing: .01em; min-height: 100vh;
 }
 .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; }
-.brandfont { font-family: "Outfit", "Noto Sans JP", sans-serif; }
 
 /* ===== Header ===== */
 header {
@@ -49,7 +40,11 @@ header {
   border-bottom: 1px solid rgba(236,234,246,.9);
 }
 .nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-.logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 17px; text-decoration: none; color: var(--ink); }
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 900; font-size: 17px; text-decoration: none; color: var(--ink);
+  background: none; border: none; cursor: pointer; font-family: inherit;
+}
 .logo .dot {
   width: 32px; height: 32px; border-radius: 10px;
   background: var(--grad); display: grid; place-items: center;
@@ -74,66 +69,148 @@ header {
 /* ===== Screens ===== */
 .screen { display: none; }
 .screen.active { display: block; animation: fade .35s ease; }
-
 @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes slideIn { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
 
-/* ===== Loading ===== */
-#screen-loading { text-align: center; padding: 100px 20px; }
-.spinner {
-  width: 48px; height: 48px;
-  border: 4px solid var(--line); border-top-color: var(--violet);
-  border-radius: 50%; animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-}
-.loading-text { color: var(--muted); font-weight: 600; font-size: 15px; }
-
-/* ===== Error ===== */
-#screen-error { text-align: center; padding: 80px 20px; }
+/* ===== State screens ===== */
+.state-screen { text-align: center; padding: 80px 20px; }
 .state-icon { font-size: 56px; margin-bottom: 18px; }
 .state-title { font-size: 21px; font-weight: 900; margin-bottom: 10px; }
 .state-msg { color: var(--muted); font-size: 14px; max-width: 380px; margin: 0 auto 28px; line-height: 1.8; }
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid var(--line); border-top-color: var(--violet);
+  border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;
+}
+.loading-text { color: var(--muted); font-weight: 600; font-size: 15px; }
 
-/* ===== Empty ===== */
-#screen-empty { text-align: center; padding: 80px 20px; }
+/* ===== TOP ===== */
+#screen-top { padding: 36px 0 60px; }
+.top-hero {
+  text-align: center; padding: 40px 24px 44px;
+  background: var(--grad); border-radius: 26px; color: #fff;
+  margin-bottom: 28px; position: relative; overflow: hidden;
+}
+.top-hero-icon { font-size: 60px; line-height: 1; margin-bottom: 14px; }
+.top-hero-title { font-size: 24px; font-weight: 900; line-height: 1.35; margin-bottom: 12px; }
+.top-hero-sub { font-size: 13px; opacity: .88; line-height: 1.85; }
+.top-features { display: grid; gap: 10px; margin-bottom: 28px; }
+.top-feature {
+  display: flex; align-items: center; gap: 14px;
+  background: #fff; border: 1px solid var(--line);
+  border-radius: 16px; padding: 14px 18px; box-shadow: var(--shadow-sm);
+}
+.top-feature-icon { font-size: 26px; flex-shrink: 0; }
+.top-feature-text strong { display: block; font-size: 13px; font-weight: 900; margin-bottom: 1px; }
+.top-feature-text span { font-size: 12px; color: var(--muted); }
+.top-cta { text-align: center; }
+.top-cta .btn-primary { font-size: 16px; padding: 15px 40px; }
+.top-cta-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+.top-fav-link {
+  background: none; border: none; color: var(--violet);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  margin-top: 14px; font-family: inherit; display: inline-flex; align-items: center; gap: 4px;
+}
+.top-fav-link:hover { text-decoration: underline; }
 
-/* ===== Done ===== */
-#screen-done { text-align: center; padding: 80px 20px; }
-.done-fav-hint { font-size: 13px; color: var(--muted); margin-top: 18px; }
+/* ===== QUIZ ===== */
+#screen-quiz { padding: 32px 0 60px; }
+.quiz-progress {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+}
+.quiz-dots { display: flex; gap: 6px; }
+.quiz-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--line); transition: .3s;
+}
+.quiz-dot.active { background: var(--violet); width: 24px; border-radius: 4px; }
+.quiz-dot.done { background: var(--violet2); }
+.quiz-step-label { font-size: 12px; color: var(--muted); font-weight: 700; }
+.quiz-card {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: 22px; padding: 28px 24px; box-shadow: var(--shadow);
+}
+.quiz-q { font-size: 17px; font-weight: 900; margin-bottom: 20px; line-height: 1.5; }
+.quiz-options { display: grid; gap: 9px; }
+.quiz-opt {
+  display: flex; align-items: center; gap: 12px;
+  border: 1.5px solid var(--line); border-radius: 14px;
+  padding: 13px 16px; cursor: pointer; background: #fff;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  color: var(--ink); transition: .18s; text-align: left; width: 100%;
+}
+.quiz-opt:hover { border-color: var(--violet2); background: var(--soft); }
+.quiz-opt.selected { border-color: var(--violet); background: var(--soft); color: var(--violet); }
+.quiz-opt-icon { font-size: 20px; flex-shrink: 0; }
 
-/* ===== Swipe Screen ===== */
-#screen-swipe { padding: 28px 0 60px; }
+/* ===== RESULT ===== */
+#screen-result { padding: 40px 0 60px; text-align: center; }
+.result-card {
+  background: #fff; border-radius: 26px;
+  padding: 40px 28px 36px; box-shadow: var(--shadow); margin-bottom: 28px;
+}
+.result-icon { font-size: 64px; margin-bottom: 16px; }
+.result-label { font-size: 11px; font-weight: 900; color: var(--muted); letter-spacing: .1em; margin-bottom: 8px; }
+.result-type { font-size: 23px; font-weight: 900; margin-bottom: 14px; }
+.result-desc { font-size: 14px; color: var(--muted); line-height: 1.85; max-width: 400px; margin: 0 auto; }
+.result-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.result-retry {
+  background: none; border: none; color: var(--muted);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: inherit; padding: 4px 8px;
+}
+.result-retry:hover { color: var(--ink); text-decoration: underline; }
 
-.swipe-header { text-align: center; margin-bottom: 20px; }
+/* ===== SWIPE ===== */
+#screen-swipe { padding: 24px 0 56px; }
+.swipe-header { text-align: center; margin-bottom: 16px; }
 .progress-bar-wrap {
   height: 7px; background: var(--line); border-radius: 999px;
-  overflow: hidden; max-width: 440px; margin: 0 auto 10px;
+  overflow: hidden; max-width: 440px; margin: 0 auto 8px;
 }
 .progress-bar {
-  height: 100%; background: var(--grad);
-  border-radius: 999px;
-  transition: width .45s cubic-bezier(.2,.8,.2,1);
-  min-width: 0;
+  height: 100%; background: var(--grad); border-radius: 999px;
+  transition: width .45s cubic-bezier(.2,.8,.2,1); min-width: 0;
 }
 .progress-label { font-size: 13px; color: var(--muted); font-weight: 700; }
+.swipe-hint-bar {
+  text-align: center; font-size: 12px; color: var(--muted);
+  font-weight: 600; margin-bottom: 10px;
+}
 
-/* ===== Swipe Card ===== */
-.card-stage { position: relative; max-width: 560px; margin: 0 auto; }
+/* Card stage + drag */
+.card-stage {
+  position: relative; max-width: 560px; margin: 0 auto;
+  user-select: none; -webkit-user-select: none;
+}
 .swipe-card {
   background: #fff; border: 1px solid var(--line);
-  border-radius: 26px; box-shadow: var(--shadow);
-  overflow: hidden; animation: slideIn .32s cubic-bezier(.2,.8,.2,1);
+  border-radius: 26px; box-shadow: var(--shadow); overflow: hidden;
+  cursor: grab; touch-action: none; will-change: transform;
 }
+.swipe-card.dragging { cursor: grabbing; }
+.swipe-card.card-enter { animation: slideIn .32s cubic-bezier(.2,.8,.2,1); }
+
+/* Drag hint overlays */
+.drag-hint {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 20; opacity: 0; pointer-events: none;
+  font-weight: 900; font-size: 14px; text-align: center;
+  border: 2px solid; border-radius: 10px; padding: 8px 12px; line-height: 1.4;
+}
+.hint-skip { left: 10px; color: var(--muted); border-color: var(--muted); background: rgba(99,112,136,.08); }
+.hint-fav  { right: 10px; color: var(--coral); border-color: var(--coral); background: rgba(255,122,24,.08); }
+
 .card-header { padding: 22px 26px 18px; background: var(--grad); color: #fff; }
 .card-org { font-size: 11px; font-weight: 700; opacity: .82; letter-spacing: .07em; margin-bottom: 5px; }
 .card-title { font-size: 19px; font-weight: 900; line-height: 1.4; }
 .card-body { padding: 20px 26px 24px; }
 .card-badges { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
 .badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
-.badge-cat { background: var(--soft); color: var(--violet); }
-.badge-area { background: rgba(255,122,24,.1); color: var(--coral); }
-.badge-term { background: rgba(99,112,136,.1); color: var(--muted); }
+.badge-cat    { background: var(--soft); color: var(--violet); }
+.badge-area   { background: rgba(255,122,24,.1); color: var(--coral); }
+.badge-term   { background: rgba(99,112,136,.1); color: var(--muted); }
 .badge-reward { background: rgba(23,99,216,.08); color: var(--violet); }
 .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .tag { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--muted); }
@@ -148,7 +225,7 @@ header {
 /* ===== Action Buttons ===== */
 .action-bar {
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px; max-width: 560px; margin: 18px auto 0;
+  gap: 10px; max-width: 560px; margin: 16px auto 0;
 }
 .action-btn {
   border: none; cursor: pointer; font-family: inherit;
@@ -167,18 +244,16 @@ header {
   box-shadow: 0 12px 28px -10px rgba(255,122,24,.5);
 }
 .btn-fav:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -12px rgba(255,122,24,.55); }
-.btn-fav.saved {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  box-shadow: 0 12px 28px -10px rgba(34,197,94,.4);
-}
-.btn-fav.saved:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -12px rgba(34,197,94,.5); }
+.btn-fav.saved { background: linear-gradient(135deg, #22c55e, #4ade80); box-shadow: 0 12px 28px -10px rgba(34,197,94,.4); }
+.btn-fav.saved:hover { transform: translateY(-2px); }
 .btn-detail { background: var(--soft); color: var(--violet); border: 1.5px solid var(--line); }
 .btn-detail:hover { background: var(--violet); color: #fff; border-color: var(--violet); }
 .btn-url { background: var(--grad); color: #fff; box-shadow: 0 12px 28px -10px rgba(23,99,216,.5); }
-.btn-url:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 18px 36px -12px rgba(23,99,216,.55); }
+.btn-url:hover:not(:disabled) { transform: translateY(-2px); }
 .btn-url:disabled { opacity: .35; cursor: not-allowed; box-shadow: none; }
+.swipe-sub-btns { text-align: center; margin-top: 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-/* ===== General Buttons ===== */
+/* ===== General ===== */
 .btn {
   border: none; cursor: pointer; font-family: inherit;
   font-weight: 800; border-radius: 999px; padding: 13px 28px;
@@ -190,8 +265,8 @@ header {
 .btn-primary:hover { transform: translateY(-2px); }
 .btn-ghost { background: #fff; color: var(--violet); border: 1.5px solid var(--line); box-shadow: var(--shadow-sm); }
 .btn-ghost:hover { border-color: var(--violet2); transform: translateY(-2px); }
-
 .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.done-fav-hint { font-size: 13px; color: var(--muted); margin-top: 18px; }
 
 /* ===== Modal ===== */
 .modal-overlay {
@@ -201,16 +276,10 @@ header {
   padding: 20px; backdrop-filter: blur(4px);
 }
 .modal-overlay.open { display: flex; animation: fade .2s ease; }
-.modal {
-  background: #fff; border-radius: 26px;
-  max-width: 600px; width: 100%; max-height: 88vh;
-  overflow-y: auto; box-shadow: var(--shadow-lg);
-}
+.modal { background: #fff; border-radius: 26px; max-width: 600px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
 .modal-header {
-  padding: 24px 28px 20px;
-  background: var(--grad); color: #fff;
-  border-radius: 26px 26px 0 0;
-  position: sticky; top: 0; z-index: 1;
+  padding: 24px 28px 20px; background: var(--grad); color: #fff;
+  border-radius: 26px 26px 0 0; position: sticky; top: 0; z-index: 1;
 }
 .modal-close {
   float: right; background: rgba(255,255,255,.2);
@@ -226,8 +295,6 @@ header {
 .detail-label { font-size: 10px; font-weight: 900; color: var(--muted); letter-spacing: .1em; margin-bottom: 4px; text-transform: uppercase; }
 .detail-val { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.65; }
 .modal-actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
-
-/* ===== Favorites Modal ===== */
 #modal-fav .modal-header { background: var(--grad-warm); }
 .fav-list { display: grid; gap: 12px; margin-top: 4px; }
 .fav-item { background: var(--soft); border-radius: 14px; padding: 14px 16px; }
@@ -244,7 +311,6 @@ header {
 }
 .fav-clear-btn:hover { background: #fee2e2; color: #dc2626; }
 
-/* ===== Responsive ===== */
 @media (max-width: 480px) {
   .action-bar { gap: 8px; }
   .action-btn { padding: 13px 6px; font-size: 14px; }
@@ -255,6 +321,8 @@ header {
   .card-title { font-size: 17px; }
   .modal { border-radius: 20px; }
   .modal-header { border-radius: 20px 20px 0 0; }
+  .top-hero-title { font-size: 20px; }
+  .quiz-q { font-size: 15px; }
 }
 </style>
 </head>
@@ -262,13 +330,13 @@ header {
 
 <header>
   <div class="wrap nav">
-    <a class="logo" href="#">
+    <button class="logo" onclick="goTop()">
       <span class="dot">そ</span>
       <span>
         絶対そうしよ
         <small>スワイプで挑戦をさがす</small>
       </span>
-    </a>
+    </button>
     <button class="nav-fav-btn" onclick="openFavModal()">
       ⭐ 気になる <span class="fav-count" id="favCount">0</span>
     </button>
@@ -278,25 +346,98 @@ header {
 <main>
   <div class="wrap">
 
+    <!-- ===== TOP ===== -->
+    <div class="screen" id="screen-top">
+      <div class="top-hero">
+        <div class="top-hero-icon">🎯</div>
+        <div class="top-hero-title">あなたにぴったりの<br>挑戦機会をさがそう</div>
+        <div class="top-hero-sub">石川・北陸エリアのインターン・プロジェクト情報を<br>スワイプで直感的に探せます</div>
+      </div>
+      <div class="top-features">
+        <div class="top-feature">
+          <div class="top-feature-icon">🔍</div>
+          <div class="top-feature-text">
+            <strong>かんたん診断で絞り込み</strong>
+            <span>4つの質問に答えるだけで、あなたに合った機会が見つかります</span>
+          </div>
+        </div>
+        <div class="top-feature">
+          <div class="top-feature-icon">👆</div>
+          <div class="top-feature-text">
+            <strong>スワイプで直感的に探す</strong>
+            <span>気になったらハートを押すだけ。気になるリストに保存できます</span>
+          </div>
+        </div>
+        <div class="top-feature">
+          <div class="top-feature-icon">⭐</div>
+          <div class="top-feature-text">
+            <strong>気になるリストで管理</strong>
+            <span>保存した挑戦をまとめて確認。公式サイトにもすぐ飛べます</span>
+          </div>
+        </div>
+      </div>
+      <div class="top-cta">
+        <button class="btn btn-primary" onclick="startQuiz()">診断をはじめる →</button>
+        <div class="top-cta-note">4問の質問に答えるとおすすめが表示されます</div>
+        <button class="top-fav-link" onclick="openFavModal()">⭐ 気になるリストを見る</button>
+      </div>
+    </div>
+
     <!-- ===== Loading ===== -->
     <div class="screen" id="screen-loading">
-      <div class="spinner"></div>
-      <p class="loading-text">挑戦機会を読み込み中...</p>
+      <div class="state-screen">
+        <div class="spinner"></div>
+        <p class="loading-text">挑戦機会を読み込み中...</p>
+      </div>
     </div>
 
     <!-- ===== Error ===== -->
     <div class="screen" id="screen-error">
-      <div class="state-icon">⚠️</div>
-      <div class="state-title">データを取得できませんでした</div>
-      <p class="state-msg">サーバーへの接続に失敗しました。<br>しばらく時間をおいてから再試行してください。</p>
-      <button class="btn btn-primary" onclick="loadSources()">再試行する</button>
+      <div class="state-screen">
+        <div class="state-icon">⚠️</div>
+        <div class="state-title">データを取得できませんでした</div>
+        <p class="state-msg">掲載情報を取得できませんでした。時間をおいて再読み込みしてください。</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="retryLoad()">再試行する</button>
+          <button class="btn btn-ghost" onclick="goTop()">トップへ戻る</button>
+        </div>
+      </div>
     </div>
 
     <!-- ===== Empty ===== -->
     <div class="screen" id="screen-empty">
-      <div class="state-icon">🌱</div>
-      <div class="state-title">現在、掲載準備中です</div>
-      <p class="state-msg">まもなく挑戦機会が掲載される予定です。<br>しばらくお待ちください。</p>
+      <div class="state-screen">
+        <div class="state-icon">🌱</div>
+        <div class="state-title">現在、掲載準備中です</div>
+        <p class="state-msg">まもなく挑戦機会が掲載される予定です。<br>しばらくお待ちください。</p>
+        <button class="btn btn-ghost" onclick="goTop()">トップへ戻る</button>
+      </div>
+    </div>
+
+    <!-- ===== QUIZ ===== -->
+    <div class="screen" id="screen-quiz">
+      <div class="quiz-progress">
+        <div class="quiz-dots" id="quizDots"></div>
+        <div class="quiz-step-label" id="quizStepLabel">1 / 4</div>
+      </div>
+      <div class="quiz-card">
+        <div class="quiz-q" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+      </div>
+    </div>
+
+    <!-- ===== RESULT ===== -->
+    <div class="screen" id="screen-result">
+      <div class="result-card">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-label">あなたのタイプ</div>
+        <div class="result-type" id="resultType"></div>
+        <div class="result-desc" id="resultDesc"></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="goToSwipe()">おすすめを見る →</button>
+        <button class="result-retry" onclick="startQuiz()">↩ もう一度診断する</button>
+      </div>
     </div>
 
     <!-- ===== Swipe ===== -->
@@ -307,13 +448,14 @@ header {
         </div>
         <div class="progress-label" id="progressLabel">— / —</div>
       </div>
-
+      <p class="swipe-hint-bar">← スキップ ｜ ドラッグまたはボタンで操作 ｜ 気になる →</p>
       <div class="card-stage">
+        <div class="drag-hint hint-skip" id="hintSkip">⏭<br>スキップ</div>
+        <div class="drag-hint hint-fav"  id="hintFav">⭐<br>気になる</div>
         <div class="swipe-card" id="mainCard"></div>
       </div>
-
       <div class="action-bar">
-        <button class="action-btn btn-skip" onclick="skipCard()">
+        <button class="action-btn btn-skip" onclick="doSkip()">
           <span class="btn-icon">⏭</span>
           <span class="btn-label">スキップ</span>
         </button>
@@ -330,18 +472,28 @@ header {
           <span class="btn-label">公式サイトへ</span>
         </button>
       </div>
+      <div class="swipe-sub-btns">
+        <button class="btn btn-ghost" style="font-size:13px;padding:10px 20px" onclick="startQuiz()">もう一度診断する</button>
+        <button class="btn btn-ghost" style="font-size:13px;padding:10px 20px" onclick="goTop()">トップへ戻る</button>
+      </div>
     </div>
 
     <!-- ===== Done ===== -->
     <div class="screen" id="screen-done">
-      <div class="state-icon">🎉</div>
-      <div class="state-title">すべて確認しました！</div>
-      <p class="state-msg">お疲れさまでした。<br>気になった挑戦は右上から確認できます。</p>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="restartSwipe()">もう一度見る</button>
-        <button class="btn btn-ghost" onclick="openFavModal()">気になるリスト ⭐</button>
+      <div class="state-screen">
+        <div class="state-icon">🎉</div>
+        <div class="state-title">すべて確認しました！</div>
+        <p class="state-msg">お疲れさまでした。<br>気になった挑戦は右上から確認できます。</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="restartSwipe()">もう一度見る</button>
+          <button class="btn btn-ghost" onclick="openFavModal()">気になるリスト ⭐</button>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-ghost" style="font-size:13px;padding:10px 20px" onclick="startQuiz()">もう一度診断する</button>
+          <button class="btn btn-ghost" style="font-size:13px;padding:10px 20px" onclick="goTop()">トップへ戻る</button>
+        </div>
+        <p class="done-fav-hint" id="doneFavHint"></p>
       </div>
-      <p class="done-fav-hint" id="doneFavHint"></p>
     </div>
 
   </div>
@@ -380,21 +532,139 @@ header {
 /* ============================================================
    CONFIG
 ============================================================ */
-const API_URL = 'https://gakuchika-source-db.vercel.app/api/sources';
-const FAV_KEY = 'challengeSwipeFavorites';
+const API_URL   = 'https://gakuchika-source-db.vercel.app/api/sources';
+const FAV_KEY   = 'challengeSwipeFavorites';
+const DRAG_THRESHOLD = 80;
 
 /* ============================================================
    STATE
 ============================================================ */
-let sources = [];
-let currentIndex = 0;
+let allSources    = [];
+let sources       = [];
+let currentIndex  = 0;
+let sourcesReady  = false;
+let sourcesError  = false;
+
+/* Quiz */
+let quizStep      = 0;
+const quizAnswers = {};
+let diagType      = null;
+let diagArea      = 'any';
+
+/* ============================================================
+   QUIZ DATA
+============================================================ */
+const QUESTIONS = [
+  {
+    id: 'field',
+    q: '興味がある分野はどれですか？',
+    opts: [
+      { v: 'area',      label: '地域課題・まちづくり',   icon: '🏙️' },
+      { v: 'it',        label: 'IT・アプリ開発',         icon: '💻' },
+      { v: 'planning',  label: '企画・マーケティング',   icon: '📊' },
+      { v: 'education', label: '教育・子ども',           icon: '📚' },
+      { v: 'business',  label: '起業・ビジネス',         icon: '🚀' },
+      { v: 'volunteer', label: 'ボランティア・社会貢献', icon: '🤝' },
+    ]
+  },
+  {
+    id: 'style',
+    q: 'どんな関わり方がしたいですか？',
+    opts: [
+      { v: 'intern',    label: '実務に近いインターン',  icon: '💼' },
+      { v: 'project',   label: 'プロジェクト型の活動',  icon: '🎯' },
+      { v: 'volunteer', label: 'ボランティア活動',       icon: '🤝' },
+      { v: 'event',     label: 'イベント・単発参加',    icon: '🎪' },
+    ]
+  },
+  {
+    id: 'value',
+    q: '特に大切にしたいことは？',
+    opts: [
+      { v: 'skill',   label: 'スキルアップ・実践経験', icon: '⚡' },
+      { v: 'region',  label: '地域への貢献',           icon: '🌱' },
+      { v: 'career',  label: '将来のキャリア形成',     icon: '🎓' },
+      { v: 'impact',  label: '社会的なインパクト',     icon: '✨' },
+    ]
+  },
+  {
+    id: 'area',
+    q: '活動エリアの希望は？',
+    opts: [
+      { v: 'ishikawa', label: '石川',        icon: '⛩️' },
+      { v: 'toyama',   label: '富山',        icon: '🏔️' },
+      { v: 'fukui',    label: '福井',        icon: '🦕' },
+      { v: 'online',   label: 'オンライン可', icon: '🌐' },
+      { v: 'any',      label: 'こだわらない', icon: '✅' },
+    ]
+  },
+];
+
+/* ============================================================
+   DIAGNOSIS
+============================================================ */
+const DIAG_TYPES = {
+  it:        { label: 'IT課題解決タイプ',      icon: '💻', desc: 'テクノロジーで社会課題を解決することに情熱があるあなた。IT・エンジニアリング系のインターンやプロジェクトがおすすめです。' },
+  planning:  { label: '企画マーケタイプ',      icon: '📊', desc: 'アイデアを形にして人に届けることが得意なあなた。企画・マーケティング・広報系の挑戦機会がぴったりです。' },
+  business:  { label: '起業チャレンジタイプ',  icon: '🚀', desc: '自分のビジネスを作りたいというエネルギーがあるあなた。起業支援・スタートアップ系のプログラムが向いています。' },
+  area:      { label: '地域実践タイプ',        icon: '🏙️', desc: '地域に根ざした活動や地方創生に興味があるあなた。まちづくり・地域課題解決系のインターンがおすすめです。' },
+  education: { label: '教育サポートタイプ',    icon: '📚', desc: '次世代を育てることや教育に関心があるあなた。教育・子ども支援系のプログラムやボランティアが向いています。' },
+  volunteer: { label: '社会貢献タイプ',        icon: '🤝', desc: '社会をより良くしたいという気持ちを持つあなた。NPO・ボランティア・社会課題解決系の活動がおすすめです。' },
+};
+
+const TYPE_KWS = {
+  it:        ['IT', 'アプリ', 'プログラム', 'エンジニア', 'Web', 'web', 'デジタル', '開発', 'tech', 'Tech', 'システム', 'プログラミング'],
+  planning:  ['企画', 'マーケ', 'PR', 'プロモ', 'ブランド', '広報', 'SNS', 'コンテンツ', 'マーケティング'],
+  business:  ['起業', 'ビジネス', 'スタートアップ', '事業', 'アントレ', '経営'],
+  area:      ['地域', 'まちづくり', 'コミュニティ', '地方', '石川', '富山', '福井', '能登', '金沢', '地方創生'],
+  education: ['教育', '子ども', '学習', 'キッズ', 'こども', '学校', '先生', '塾'],
+  volunteer: ['ボランティア', '社会貢献', '福祉', 'NPO', 'NGO', '非営利', '社会課題'],
+};
+
+const AREA_KWS = {
+  ishikawa: ['石川', '金沢', '能登', '加賀', '輪島', '七尾', '小松'],
+  toyama:   ['富山', 'とやま'],
+  fukui:    ['福井', 'ふくい'],
+  online:   ['オンライン', 'リモート', '全国', 'remote', 'online', 'Zoom', 'zoom'],
+  any:      [],
+};
+
+function calcDiagType(ans) {
+  const f = ans.field || '';
+  if (f === 'it')        return 'it';
+  if (f === 'planning')  return 'planning';
+  if (f === 'business')  return 'business';
+  if (f === 'education') return 'education';
+  if (f === 'area' || ans.value === 'region') return 'area';
+  return 'volunteer';
+}
+
+function scoreSource(src, typeKws, areaKws) {
+  const text = [
+    src.title, src.name, src.type, src.category,
+    src.description, src.shortDescription, src.gain,
+    src.area, src.region, src.location,
+    ...(Array.isArray(src.tags) ? src.tags : []),
+    ...(Array.isArray(src.keywords) ? src.keywords : []),
+    ...(Array.isArray(src.regions) ? src.regions : []),
+  ].filter(Boolean).join(' ');
+  let s = 0;
+  for (const kw of typeKws) { if (text.includes(kw)) s += 1; }
+  for (const kw of areaKws) { if (text.includes(kw)) s += 2; }
+  return s;
+}
+
+function sortSources(list, type, areaChoice) {
+  const tKws = TYPE_KWS[type] || [];
+  const aKws = areaChoice === 'any' ? [] : (AREA_KWS[areaChoice] || []);
+  if (!tKws.length && !aKws.length) return list;
+  return [...list].sort((a, b) => scoreSource(b, tKws, aKws) - scoreSource(a, tKws, aKws));
+}
 
 /* ============================================================
    FIELD ACCESSORS
-   ─ 複数フィールド名を試してフォールバックで取得
 ============================================================ */
 function getStr(src) {
-  // returns a curried field-getter for a source object
   return function(...keys) {
     for (const k of keys) {
       const v = src[k];
@@ -403,7 +673,6 @@ function getStr(src) {
     return '';
   };
 }
-
 function getArr(src, ...keys) {
   for (const k of keys) {
     if (Array.isArray(src[k]) && src[k].length > 0) return src[k];
@@ -417,48 +686,34 @@ function getArr(src, ...keys) {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
-  if (el) el.classList.add('active');
+  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
 }
 
 /* ============================================================
    localStorage FAVORITES
-   ─ Supabaseは使わない。localStorageのみ。
 ============================================================ */
 function loadFavs() {
   try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
   catch (e) { return []; }
 }
-
 function saveFavs(favs) {
   try { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
   catch (e) { console.warn('localStorage write error', e); }
 }
-
 function getSrcId(src) {
   return getStr(src)('id', 'sourceId', '_id', 'uuid') || getStr(src)('title');
 }
-
 function isFaved(src) {
   const id = getSrcId(src);
   return loadFavs().some(f => getSrcId(f) === id);
 }
-
-/** トグル: true=追加, false=削除 */
 function toggleFavById(src) {
   const favs = loadFavs();
   const id = getSrcId(src);
   const idx = favs.findIndex(f => getSrcId(f) === id);
-  if (idx >= 0) {
-    favs.splice(idx, 1);
-    saveFavs(favs);
-    return false;
-  } else {
-    favs.push(src);
-    saveFavs(favs);
-    return true;
-  }
+  if (idx >= 0) { favs.splice(idx, 1); saveFavs(favs); return false; }
+  else          { favs.push(src);       saveFavs(favs); return true;  }
 }
-
 function updateFavCountBadge() {
   document.getElementById('favCount').textContent = loadFavs().length;
 }
@@ -468,48 +723,47 @@ function updateFavCountBadge() {
 ============================================================ */
 function renderCard(src, idx, total) {
   const f = getStr(src);
-  const title   = f('title', 'name');
-  const org     = f('organizationName', 'org', 'company', 'organization', 'orgName');
-  const cat     = f('type', 'category', 'cat');
-  const area    = f('area', 'region', 'location');
-  const areas   = getArr(src, 'regions', 'areas', 'targetRegions');
+  const title       = f('title', 'name');
+  const org         = f('organizationName', 'org', 'company', 'organization', 'orgName');
+  const cat         = f('type', 'category', 'cat');
+  const area        = f('area', 'region', 'location');
+  const areas       = getArr(src, 'regions', 'areas', 'targetRegions');
   const displayArea = area || (areas.length ? areas.join(' / ') : '');
-  const term    = f('term', 'duration', 'period');
-  const reward  = f('reward', 'compensation', 'salary');
-  const deadline = f('deadline', 'applicationDeadline', 'dueDate', 'closingDate');
-  const gain    = f('gain', 'shortDescription', 'description', 'recommendationText', 'summary', 'overview');
-  const tags    = getArr(src, 'tags', 'keywords', 'skills');
-  const url     = f('url', 'websiteUrl', 'officialUrl', 'link', 'sourceUrl', 'applyUrl');
+  const term        = f('term', 'duration', 'period');
+  const reward      = f('reward', 'compensation', 'salary');
+  const deadline    = f('deadline', 'applicationDeadline', 'dueDate', 'closingDate');
+  const gain        = f('gain', 'shortDescription', 'description', 'recommendationText', 'summary', 'overview');
+  const tags        = getArr(src, 'tags', 'keywords', 'skills');
+  const url         = f('url', 'websiteUrl', 'officialUrl', 'link', 'sourceUrl', 'applyUrl');
 
-  /* progress */
   const pct = total > 1 ? Math.round((idx / (total - 1)) * 100) : 100;
   document.getElementById('progressBar').style.width = Math.max(2, pct) + '%';
   document.getElementById('progressLabel').textContent = `${idx + 1} / ${total}件`;
-
-  /* fav button state */
   updateFavBtn(isFaved(src));
+  document.getElementById('btnUrl').disabled = !url;
 
-  /* url button */
-  const urlBtn = document.getElementById('btnUrl');
-  urlBtn.disabled = !url;
-
-  /* badges */
   const badgesHtml = [
-    cat        ? `<span class="badge badge-cat">${cat}</span>` : '',
-    displayArea ? `<span class="badge badge-area">📍 ${displayArea}</span>` : '',
-    term       ? `<span class="badge badge-term">${term}</span>` : '',
-    reward     ? `<span class="badge badge-reward">💰 ${reward}</span>` : '',
+    cat         ? `<span class="badge badge-cat">${esc(cat)}</span>` : '',
+    displayArea ? `<span class="badge badge-area">📍 ${esc(displayArea)}</span>` : '',
+    term        ? `<span class="badge badge-term">${esc(term)}</span>` : '',
+    reward      ? `<span class="badge badge-reward">💰 ${esc(reward)}</span>` : '',
   ].filter(Boolean).join('');
 
   const tagsHtml = tags.length
-    ? `<div class="card-tags">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>`
+    ? `<div class="card-tags">${tags.map(t => `<span class="tag">${esc(String(t))}</span>`).join('')}</div>`
     : '';
 
   const deadlineHtml = deadline
-    ? `<div class="card-deadline"><span class="dl-label">締切</span>${deadline}</div>`
+    ? `<div class="card-deadline"><span class="dl-label">締切</span>${esc(deadline)}</div>`
     : '';
 
-  document.getElementById('mainCard').innerHTML = `
+  const card = document.getElementById('mainCard');
+  /* reset styles before content swap */
+  card.style.transition = 'none';
+  card.style.transform  = '';
+  card.style.opacity    = '';
+  card.classList.remove('card-enter', 'dragging');
+  card.innerHTML = `
     <div class="card-header">
       ${org ? `<div class="card-org">${esc(org)}</div>` : ''}
       <div class="card-title">${esc(title) || '（タイトル未設定）'}</div>
@@ -521,10 +775,17 @@ function renderCard(src, idx, total) {
       ${deadlineHtml}
     </div>
   `;
+  /* force reflow then re-enable transitions + entry animation */
+  void card.offsetWidth;
+  card.style.transition = '';
+  card.classList.add('card-enter');
+
+  attachDragHandlers();
 }
 
 function updateFavBtn(faved) {
   const btn = document.getElementById('btnFav');
+  if (!btn) return;
   if (faved) {
     btn.classList.add('saved');
     btn.innerHTML = '<span class="btn-icon">✅</span><span class="btn-label">保存済み</span>';
@@ -534,37 +795,143 @@ function updateFavBtn(faved) {
   }
 }
 
-/* HTML エスケープ */
 function esc(str) {
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+/* ============================================================
+   DRAG / SWIPE (Pointer Events: mouse + touch)
+============================================================ */
+let dragStartX   = 0;
+let dragCurrentX = 0;
+let isDragging   = false;
+
+function attachDragHandlers() {
+  const card = document.getElementById('mainCard');
+  if (!card) return;
+  card.onpointerdown   = onDragStart;
+  card.onpointermove   = onDragMove;
+  card.onpointerup     = onDragEnd;
+  card.onpointercancel = onDragCancel;
+}
+
+function onDragStart(e) {
+  if (isDragging) return;
+  isDragging   = true;
+  dragStartX   = e.clientX;
+  dragCurrentX = 0;
+  this.classList.add('dragging');
+  this.setPointerCapture(e.pointerId);
+}
+
+function onDragMove(e) {
+  if (!isDragging) return;
+  dragCurrentX = e.clientX - dragStartX;
+  const rotate = dragCurrentX * 0.06;
+  this.style.transform = `translateX(${dragCurrentX}px) rotate(${rotate}deg)`;
+  setHintOpacity(dragCurrentX);
+}
+
+function onDragEnd(e) {
+  if (!isDragging) return;
+  isDragging = false;
+  this.classList.remove('dragging');
+  this.releasePointerCapture(e.pointerId);
+  setHintOpacity(0);
+  const dx = dragCurrentX;
+  dragCurrentX = 0;
+  if (dx > DRAG_THRESHOLD) {
+    doSwipeAnimate(this, 'right');
+  } else if (dx < -DRAG_THRESHOLD) {
+    doSwipeAnimate(this, 'left');
+  } else {
+    this.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)';
+    this.style.transform  = '';
+    setTimeout(() => { this.style.transition = ''; }, 300);
+  }
+}
+
+function onDragCancel(e) {
+  if (!isDragging) return;
+  isDragging = false;
+  this.classList.remove('dragging');
+  this.releasePointerCapture(e.pointerId);
+  this.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)';
+  this.style.transform  = '';
+  setTimeout(() => { this.style.transition = ''; }, 300);
+  setHintOpacity(0);
+  dragCurrentX = 0;
+}
+
+function setHintOpacity(dx) {
+  const hs = document.getElementById('hintSkip');
+  const hf = document.getElementById('hintFav');
+  if (!hs || !hf) return;
+  if (dx < -20) {
+    hs.style.opacity = String(Math.min(1, Math.abs(dx) / DRAG_THRESHOLD));
+    hf.style.opacity = '0';
+  } else if (dx > 20) {
+    hf.style.opacity = String(Math.min(1, dx / DRAG_THRESHOLD));
+    hs.style.opacity = '0';
+  } else {
+    hs.style.opacity = hf.style.opacity = '0';
+  }
+}
+
+function doSwipeAnimate(card, dir) {
+  const tx  = dir === 'right' ? '130%' : '-130%';
+  const rot = dir === 'right' ? '18deg' : '-18deg';
+  card.style.transition = 'transform .32s ease, opacity .32s ease';
+  card.style.transform  = `translateX(${tx}) rotate(${rot})`;
+  card.style.opacity    = '0';
+  if (dir === 'right' && sources.length) {
+    const added = toggleFavById(sources[currentIndex]);
+    updateFavBtn(added);
+    updateFavCountBadge();
+  }
+  setTimeout(advanceCard, 320);
+}
+
+/* ============================================================
+   KEYBOARD
+============================================================ */
+document.addEventListener('keydown', e => {
+  if (document.querySelector('.modal-overlay.open')) {
+    if (e.key === 'Escape') ['modal-detail', 'modal-fav'].forEach(id => closeModal(id));
+    return;
+  }
+  if (!document.getElementById('screen-swipe').classList.contains('active')) return;
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); doSkip(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); doFavKey(); }
+  if (e.key === 'Enter')      { e.preventDefault(); openDetail(); }
+});
 
 /* ============================================================
    NAVIGATION
 ============================================================ */
-function skipCard() {
-  advanceCard();
+function doSkip() {
+  const card = document.getElementById('mainCard');
+  if (card && sources.length) doSwipeAnimate(card, 'left');
+}
+
+function doFavKey() {
+  const card = document.getElementById('mainCard');
+  if (card && sources.length) doSwipeAnimate(card, 'right');
 }
 
 function toggleFavCard() {
   if (!sources.length) return;
-  const src = sources[currentIndex];
-  const added = toggleFavById(src);
+  const added = toggleFavById(sources[currentIndex]);
   updateFavBtn(added);
   updateFavCountBadge();
 }
 
 function advanceCard() {
   currentIndex++;
-  if (currentIndex >= sources.length) {
-    showDone();
-  } else {
-    renderCard(sources[currentIndex], currentIndex, sources.length);
-  }
+  if (currentIndex >= sources.length) showDone();
+  else renderCard(sources[currentIndex], currentIndex, sources.length);
 }
 
 function showDone() {
@@ -576,7 +943,7 @@ function showDone() {
 
 function restartSwipe() {
   currentIndex = 0;
-  if (!sources.length) { loadSources(); return; }
+  if (!sources.length) { retryLoad(); return; }
   renderCard(sources[0], 0, sources.length);
   showScreen('screen-swipe');
 }
@@ -586,6 +953,8 @@ function openUrl() {
   const url = getStr(sources[currentIndex])('url', 'websiteUrl', 'officialUrl', 'link', 'sourceUrl', 'applyUrl');
   if (url) window.open(url, '_blank', 'noopener noreferrer');
 }
+
+function goTop() { showScreen('screen-top'); }
 
 /* ============================================================
    DETAIL MODAL
@@ -613,15 +982,15 @@ function openDetail() {
   document.getElementById('detailTitle').textContent = title || '（タイトル未設定）';
 
   const rows = [
-    cat           ? { label: 'カテゴリ',     val: cat } : null,
-    displayArea   ? { label: 'エリア',        val: displayArea } : null,
-    term          ? { label: '期間',          val: term } : null,
-    reward        ? { label: '報酬',          val: reward } : null,
-    deadline      ? { label: '締切',          val: deadline } : null,
-    gradeArr.length ? { label: '対象学年', val: gradeArr.join('・') + '年生' }
+    cat           ? { label: 'カテゴリ',    val: cat } : null,
+    displayArea   ? { label: 'エリア',       val: displayArea } : null,
+    term          ? { label: '期間',         val: term } : null,
+    reward        ? { label: '報酬',         val: reward } : null,
+    deadline      ? { label: '締切',         val: deadline } : null,
+    gradeArr.length ? { label: '対象学年',  val: gradeArr.join('・') + '年生' }
                    : (grade ? { label: '対象学年', val: grade } : null),
-    tags.length   ? { label: 'タグ',         val: tags.join(' ・ ') } : null,
-    gain          ? { label: '得られる経験',  val: gain } : null,
+    tags.length   ? { label: 'タグ',        val: tags.join(' ・ ') } : null,
+    gain          ? { label: '得られる経験', val: gain } : null,
   ].filter(Boolean);
 
   document.getElementById('detailBody').innerHTML = `
@@ -629,8 +998,7 @@ function openDetail() {
       <div class="detail-row">
         <div class="detail-label">${r.label}</div>
         <div class="detail-val">${esc(r.val)}</div>
-      </div>
-    `).join('')}
+      </div>`).join('')}
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="toggleFavCard();updateDetailFavBtn()">
         ${isFaved(src) ? '✅ 保存済み' : '⭐ 気になる'}
@@ -638,15 +1006,13 @@ function openDetail() {
       ${url ? `<a class="btn btn-ghost" href="${esc(url)}" target="_blank" rel="noopener noreferrer">公式サイト →</a>` : ''}
     </div>
   `;
-
   openModal('modal-detail');
 }
 
 function updateDetailFavBtn() {
   if (!sources.length) return;
-  const src = sources[currentIndex];
   const btn = document.querySelector('#modal-detail .modal-actions .btn-primary');
-  if (btn) btn.textContent = isFaved(src) ? '✅ 保存済み' : '⭐ 気になる';
+  if (btn) btn.textContent = isFaved(sources[currentIndex]) ? '✅ 保存済み' : '⭐ 気になる';
 }
 
 /* ============================================================
@@ -654,15 +1020,10 @@ function updateDetailFavBtn() {
 ============================================================ */
 function openFavModal() {
   const favs = loadFavs();
-  const listEl = document.getElementById('favList');
+  const listEl   = document.getElementById('favList');
   const clearBtn = document.getElementById('favClearBtn');
-
   if (favs.length === 0) {
-    listEl.innerHTML = `
-      <div class="fav-empty">
-        まだ保存した挑戦機会がありません。<br>
-        ⭐ 気になるボタンで保存できます。
-      </div>`;
+    listEl.innerHTML = `<div class="fav-empty">まだ保存した挑戦機会がありません。<br>⭐ 気になるボタンで保存できます。</div>`;
     clearBtn.style.display = 'none';
   } else {
     listEl.innerHTML = favs.map(f => {
@@ -670,16 +1031,14 @@ function openFavModal() {
       const org   = getStr(f)('organizationName', 'org', 'company', 'organization');
       const url   = getStr(f)('url', 'websiteUrl', 'officialUrl', 'link', 'sourceUrl', 'applyUrl');
       const cat   = getStr(f)('type', 'category', 'cat');
-      return `
-        <div class="fav-item">
-          ${org ? `<div class="fav-item-org">${esc(org)}${cat ? ` ・ ${esc(cat)}` : ''}</div>` : ''}
-          <div class="fav-item-title">${esc(title) || '（タイトル未設定）'}</div>
-          ${url ? `<a class="fav-item-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">公式サイト →</a>` : ''}
-        </div>`;
+      return `<div class="fav-item">
+        ${org ? `<div class="fav-item-org">${esc(org)}${cat ? ` ・ ${esc(cat)}` : ''}</div>` : ''}
+        <div class="fav-item-title">${esc(title) || '（タイトル未設定）'}</div>
+        ${url ? `<a class="fav-item-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">公式サイト →</a>` : ''}
+      </div>`;
     }).join('');
     clearBtn.style.display = '';
   }
-
   openModal('modal-fav');
 }
 
@@ -688,30 +1047,90 @@ function clearAllFavs() {
   saveFavs([]);
   updateFavCountBadge();
   updateFavBtn(false);
-  openFavModal(); // refresh
+  openFavModal();
 }
 
 /* ============================================================
    MODAL HELPERS
 ============================================================ */
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function handleOverlayClick(e, id) {
   if (e.target === document.getElementById(id)) closeModal(id);
 }
 
-/* キーボード ESC でモーダルを閉じる */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    ['modal-detail', 'modal-fav'].forEach(id => closeModal(id));
+/* ============================================================
+   QUIZ
+============================================================ */
+function startQuiz() {
+  quizStep = 0;
+  Object.keys(quizAnswers).forEach(k => delete quizAnswers[k]);
+  renderQuizStep();
+  showScreen('screen-quiz');
+}
+
+function renderQuizStep() {
+  const q     = QUESTIONS[quizStep];
+  const total = QUESTIONS.length;
+
+  document.getElementById('quizDots').innerHTML = QUESTIONS.map((_, i) => {
+    let cls = 'quiz-dot';
+    if (i < quizStep)    cls += ' done';
+    else if (i === quizStep) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  document.getElementById('quizStepLabel').textContent = `${quizStep + 1} / ${total}`;
+  document.getElementById('quizQuestion').textContent  = q.q;
+  document.getElementById('quizOptions').innerHTML = q.opts.map(opt => `
+    <button class="quiz-opt" onclick="selectOption('${q.id}','${opt.v}',this)">
+      <span class="quiz-opt-icon">${opt.icon}</span>${esc(opt.label)}
+    </button>`).join('');
+}
+
+function selectOption(qid, value, el) {
+  quizAnswers[qid] = value;
+  document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  setTimeout(() => {
+    quizStep++;
+    if (quizStep < QUESTIONS.length) renderQuizStep();
+    else showResult();
+  }, 260);
+}
+
+function showResult() {
+  diagType = calcDiagType(quizAnswers);
+  diagArea = quizAnswers.area || 'any';
+  const t = DIAG_TYPES[diagType];
+  document.getElementById('resultIcon').textContent = t.icon;
+  document.getElementById('resultType').textContent = t.label;
+  document.getElementById('resultDesc').textContent = t.desc;
+  showScreen('screen-result');
+}
+
+/* ============================================================
+   GO TO SWIPE
+============================================================ */
+async function goToSwipe() {
+  if (!sourcesReady && !sourcesError) {
+    showScreen('screen-loading');
+    await waitForSources();
   }
-});
+  if (sourcesError)          { showScreen('screen-error'); return; }
+  if (!allSources.length)    { showScreen('screen-empty'); return; }
+  sources      = sortSources(allSources, diagType || 'volunteer', diagArea || 'any');
+  currentIndex = 0;
+  renderCard(sources[0], 0, sources.length);
+  showScreen('screen-swipe');
+}
+
+function waitForSources() {
+  return new Promise(resolve => {
+    const check = () => (sourcesReady || sourcesError) ? resolve() : setTimeout(check, 100);
+    check();
+  });
+}
 
 /* ============================================================
    API LOAD
@@ -720,52 +1139,43 @@ document.addEventListener('keydown', e => {
    ─ 0件時は掲載準備中を表示
 ============================================================ */
 async function loadSources() {
-  showScreen('screen-loading');
-  currentIndex = 0;
-  sources = [];
-
   try {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
     const data = await res.json();
-
-    /* 配列形式・オブジェクト包み形式の両方に対応 */
     let list = [];
-    if (Array.isArray(data)) {
-      list = data;
-    } else if (data && Array.isArray(data.sources)) {
-      list = data.sources;
-    } else if (data && Array.isArray(data.data)) {
-      list = data.data;
-    } else if (data && typeof data === 'object') {
-      /* 最初に見つかった配列フィールドを試す */
+    if (Array.isArray(data))                       list = data;
+    else if (data && Array.isArray(data.sources))  list = data.sources;
+    else if (data && Array.isArray(data.data))     list = data.data;
+    else if (data && typeof data === 'object') {
       const found = Object.values(data).find(v => Array.isArray(v));
       if (found) list = found;
     }
-
-    if (list.length === 0) {
-      /* API成功・0件 → 掲載準備中 */
-      showScreen('screen-empty');
-      return;
-    }
-
-    sources = list;
-    renderCard(sources[0], 0, sources.length);
-    showScreen('screen-swipe');
-
+    allSources   = list;
+    sourcesReady = true;
   } catch (err) {
-    /* API失敗 → エラー表示（ダミーデータは出さない） */
+    /* API失敗 → ダミーデータは出さない */
     console.error('[swipe-lp] API error:', err);
-    showScreen('screen-error');
+    sourcesError = true;
   }
+}
+
+async function retryLoad() {
+  sourcesReady = false;
+  sourcesError = false;
+  allSources   = [];
+  await loadSources();
+  if (sourcesError)       { showScreen('screen-error'); return; }
+  if (!allSources.length) { showScreen('screen-empty'); return; }
+  showScreen('screen-top');
 }
 
 /* ============================================================
    INIT
 ============================================================ */
 updateFavCountBadge();
-loadSources();
+showScreen('screen-top');
+loadSources(); /* バックグラウンドで先読み */
 </script>
 </body>
 </html>
