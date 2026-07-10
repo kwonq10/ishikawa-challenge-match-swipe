@@ -311,6 +311,65 @@ header {
 }
 .fav-clear-btn:hover { background: #fee2e2; color: #dc2626; }
 
+/* ===== Swipe screen: fit to one mobile viewport ===== */
+@media (max-width: 760px) {
+  body.swipe-mode {
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  body.swipe-mode header { flex-shrink: 0; }
+  body.swipe-mode main {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  body.swipe-mode main .wrap {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  body.swipe-mode #screen-swipe.active {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    padding: 10px 0 10px;
+  }
+  body.swipe-mode .swipe-header { flex-shrink: 0; margin-bottom: 8px; }
+  body.swipe-mode .swipe-hint-bar { flex-shrink: 0; margin-bottom: 8px; }
+  body.swipe-mode .card-stage {
+    flex: 1; min-height: 0;
+    display: flex;
+  }
+  body.swipe-mode .swipe-card {
+    flex: 1;
+    display: flex; flex-direction: column;
+    min-height: 0;
+  }
+  body.swipe-mode .card-header { flex-shrink: 0; }
+  body.swipe-mode .card-title {
+    display: -webkit-box; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; overflow: hidden;
+  }
+  body.swipe-mode .card-body {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  body.swipe-mode .card-badges,
+  body.swipe-mode .card-tags,
+  body.swipe-mode .card-deadline { flex-shrink: 0; }
+  body.swipe-mode .card-tags {
+    max-height: 56px; overflow: hidden;
+  }
+  body.swipe-mode .card-gain {
+    flex: 0 1 auto;
+    display: -webkit-box; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5; overflow: hidden;
+  }
+  body.swipe-mode .action-bar { flex-shrink: 0; margin-top: 10px; }
+  body.swipe-mode .swipe-sub-btns { flex-shrink: 0; margin-top: 8px; }
+}
+
 @media (max-width: 480px) {
   .action-bar { gap: 8px; }
   .action-btn { padding: 13px 6px; font-size: 14px; }
@@ -723,6 +782,7 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
   if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+  document.body.classList.toggle('swipe-mode', id === 'screen-swipe');
 }
 
 /* ============================================================
