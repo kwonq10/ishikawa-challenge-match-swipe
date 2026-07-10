@@ -154,6 +154,10 @@ header {
 .result-label { font-size: 11px; font-weight: 900; color: var(--muted); letter-spacing: .1em; margin-bottom: 8px; }
 .result-type { font-size: 23px; font-weight: 900; margin-bottom: 14px; }
 .result-desc { font-size: 14px; color: var(--muted); line-height: 1.85; max-width: 400px; margin: 0 auto; }
+.result-grade-note {
+  margin-top: 14px; font-size: 13px; color: var(--violet); font-weight: 700;
+  background: var(--soft); border-radius: 10px; padding: 10px 14px;
+}
 .result-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .result-retry {
   background: none; border: none; color: var(--muted);
@@ -214,6 +218,7 @@ header {
 .badge-reward { background: rgba(23,99,216,.08); color: var(--violet); }
 .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .tag { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--muted); }
+.tag-more { background: transparent; border: 1px solid var(--line); color: var(--muted); }
 .card-gain { font-size: 14px; color: var(--ink); line-height: 1.72; }
 .card-deadline {
   display: flex; align-items: center; gap: 6px;
@@ -311,63 +316,134 @@ header {
 }
 .fav-clear-btn:hover { background: #fee2e2; color: #dc2626; }
 
-/* ===== Swipe screen: fit to one mobile viewport ===== */
+/* ===== App shell: every screen fits one mobile viewport ===== */
 @media (max-width: 760px) {
-  body.swipe-mode {
-    height: 100dvh;
+  body.app-mode {
+    height: 100dvh; height: 100svh;
     overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  body.app-mode .wrap { padding: 0 16px; }
+  body.app-mode .nav { height: 52px; }
+  body.app-mode .logo { font-size: 14px; gap: 8px; }
+  body.app-mode .logo .dot { width: 28px; height: 28px; font-size: 15px; border-radius: 8px; }
+  body.app-mode .logo small { font-size: 9px; }
+  body.app-mode .nav-fav-btn { font-size: 12px; padding: 6px 12px; }
+  body.app-mode header { flex-shrink: 0; }
+  body.app-mode main {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  body.app-mode main .wrap {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  body.app-mode .screen.active {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- State screens (loading / error / empty / done) ---- */
+  body.app-mode #screen-loading.active,
+  body.app-mode #screen-error.active,
+  body.app-mode #screen-empty.active,
+  body.app-mode #screen-done.active { justify-content: center; }
+  body.app-mode .state-screen { padding: 24px 20px; }
+  body.app-mode .state-icon { font-size: 42px; margin-bottom: 12px; }
+  body.app-mode .state-title { font-size: 17px; margin-bottom: 8px; }
+  body.app-mode .state-msg { font-size: 12.5px; margin-bottom: 18px; }
+  body.app-mode .spinner { width: 38px; height: 38px; margin-bottom: 14px; }
+
+  /* ---- TOP ---- */
+  body.app-mode #screen-top.active { padding: 10px 0 8px; }
+  body.app-mode .top-hero { padding: 18px 16px; margin-bottom: 10px; border-radius: 18px; }
+  body.app-mode .top-hero-icon { font-size: 32px; margin-bottom: 6px; }
+  body.app-mode .top-hero-title { font-size: 17px; margin-bottom: 4px; }
+  body.app-mode .top-hero-sub {
+    font-size: 11px; line-height: 1.5;
+    display: -webkit-box; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; overflow: hidden;
+  }
+  body.app-mode .top-features { display: flex; gap: 6px; margin-bottom: 10px; }
+  body.app-mode .top-feature { flex: 1; min-width: 0; flex-direction: column; align-items: stretch; text-align: center; padding: 8px 4px; gap: 3px; border-radius: 12px; }
+  body.app-mode .top-feature-icon { font-size: 18px; }
+  body.app-mode .top-feature-text { min-width: 0; }
+  body.app-mode .top-feature-text strong {
+    font-size: 10px; line-height: 1.25;
+    white-space: normal; overflow-wrap: break-word;
+  }
+  body.app-mode .top-feature-text span { display: none; }
+  body.app-mode .top-cta .btn-primary { font-size: 14px; padding: 12px 30px; }
+  body.app-mode .top-cta-note { font-size: 10px; margin-top: 6px; }
+  body.app-mode .top-fav-link { margin-top: 8px; font-size: 12px; }
+
+  /* ---- QUIZ ---- */
+  body.app-mode #screen-quiz.active { padding: 10px 0 8px; }
+  body.app-mode .quiz-progress { margin-bottom: 10px; }
+  body.app-mode .quiz-card { padding: 16px 14px; border-radius: 16px; }
+  body.app-mode .quiz-q { font-size: 14px; margin-bottom: 12px; line-height: 1.4; }
+  body.app-mode .quiz-options { grid-template-columns: 1fr 1fr; gap: 7px; }
+  body.app-mode .quiz-opt { padding: 10px 8px; font-size: 12.5px; gap: 6px; border-radius: 10px; }
+  body.app-mode .quiz-opt-icon { font-size: 16px; }
+
+  /* ---- RESULT ---- */
+  body.app-mode #screen-result.active { padding: 14px 0 10px; }
+  body.app-mode .result-card { padding: 20px 20px 18px; border-radius: 18px; margin-bottom: 14px; }
+  body.app-mode .result-icon { font-size: 40px; margin-bottom: 8px; }
+  body.app-mode .result-label { font-size: 10px; margin-bottom: 5px; }
+  body.app-mode .result-type { font-size: 17px; margin-bottom: 8px; }
+  body.app-mode .result-desc {
+    font-size: 12.5px; line-height: 1.55;
+    display: -webkit-box; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4; overflow: hidden;
+  }
+  body.app-mode .result-grade-note { font-size: 11.5px; padding: 8px 10px; margin-top: 10px; }
+  body.app-mode .result-actions { gap: 8px; }
+  body.app-mode .result-actions .btn-primary { font-size: 14px; padding: 12px 28px; }
+
+  /* ---- SWIPE ---- */
+  body.app-mode #screen-swipe.active { padding: 10px 0 10px; }
+  body.app-mode .swipe-header { flex-shrink: 0; margin-bottom: 8px; }
+  body.app-mode .swipe-hint-bar { flex-shrink: 0; margin-bottom: 8px; }
+  body.app-mode .card-stage {
+    flex: 1; min-height: 0;
     display: flex;
-    flex-direction: column;
   }
-  body.swipe-mode header { flex-shrink: 0; }
-  body.swipe-mode main {
-    flex: 1; min-height: 0;
-    display: flex; flex-direction: column;
-  }
-  body.swipe-mode main .wrap {
-    flex: 1; min-height: 0;
-    display: flex; flex-direction: column;
-  }
-  body.swipe-mode #screen-swipe.active {
-    flex: 1; min-height: 0;
-    display: flex; flex-direction: column;
-    padding: 10px 0 10px;
-  }
-  body.swipe-mode .swipe-header { flex-shrink: 0; margin-bottom: 8px; }
-  body.swipe-mode .swipe-hint-bar { flex-shrink: 0; margin-bottom: 8px; }
-  body.swipe-mode .card-stage {
-    flex: 1; min-height: 0;
-    display: flex;
-  }
-  body.swipe-mode .swipe-card {
+  body.app-mode .swipe-card {
     flex: 1;
     display: flex; flex-direction: column;
     min-height: 0;
   }
-  body.swipe-mode .card-header { flex-shrink: 0; }
-  body.swipe-mode .card-title {
+  body.app-mode .card-header { flex-shrink: 0; }
+  body.app-mode .card-title {
     display: -webkit-box; -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; overflow: hidden;
   }
-  body.swipe-mode .card-body {
+  body.app-mode .card-body {
     flex: 1; min-height: 0;
     display: flex; flex-direction: column;
     justify-content: center;
     overflow-y: auto;
   }
-  body.swipe-mode .card-badges,
-  body.swipe-mode .card-tags,
-  body.swipe-mode .card-deadline { flex-shrink: 0; }
-  body.swipe-mode .card-tags {
-    max-height: 56px; overflow: hidden;
-  }
-  body.swipe-mode .card-gain {
+  body.app-mode .card-badges,
+  body.app-mode .card-tags,
+  body.app-mode .card-deadline { flex-shrink: 0; }
+  body.app-mode .card-gain {
     flex: 0 1 auto;
     display: -webkit-box; -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5; overflow: hidden;
+    -webkit-line-clamp: 3; overflow: hidden;
   }
-  body.swipe-mode .action-bar { flex-shrink: 0; margin-top: 10px; }
-  body.swipe-mode .swipe-sub-btns { flex-shrink: 0; margin-top: 8px; }
+  body.app-mode .action-bar { flex-shrink: 0; margin-top: 10px; }
+  body.app-mode .swipe-sub-btns { flex-shrink: 0; margin-top: 8px; }
+
+  /* ---- Modal (fav list / detail): keep own scroll, just tighten padding ---- */
+  body.app-mode .modal-overlay { padding: 12px; }
+  body.app-mode .modal { max-height: 92vh; max-height: 92svh; }
+  body.app-mode .modal-header { padding: 18px 18px 16px; }
+  body.app-mode .modal-body { padding: 18px; }
+  body.app-mode .modal-title { font-size: 17px; }
 }
 
 @media (max-width: 480px) {
@@ -492,7 +568,7 @@ header {
         <div class="result-label">あなたのタイプ</div>
         <div class="result-type" id="resultType"></div>
         <div class="result-desc" id="resultDesc"></div>
-        <div id="resultGradeNote" style="margin-top:14px;font-size:13px;color:var(--violet);font-weight:700;background:var(--soft);border-radius:10px;padding:10px 14px;display:none"></div>
+        <div id="resultGradeNote" class="result-grade-note" style="display:none"></div>
       </div>
       <div class="result-actions">
         <button class="btn btn-primary" onclick="goToSwipe()">おすすめを見る →</button>
@@ -782,7 +858,6 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
   if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
-  document.body.classList.toggle('swipe-mode', id === 'screen-swipe');
 }
 
 /* ============================================================
@@ -845,8 +920,10 @@ function renderCard(src, idx, total) {
     reward      ? `<span class="badge badge-reward">💰 ${esc(reward)}</span>` : '',
   ].filter(Boolean).join('');
 
-  const tagsHtml = tags.length
-    ? `<div class="card-tags">${tags.map(t => `<span class="tag">${esc(String(t))}</span>`).join('')}</div>`
+  const shownTags   = tags.slice(0, 3);
+  const hiddenCount = tags.length - shownTags.length;
+  const tagsHtml = shownTags.length
+    ? `<div class="card-tags">${shownTags.map(t => `<span class="tag">${esc(String(t))}</span>`).join('')}${hiddenCount > 0 ? `<span class="tag tag-more">+${hiddenCount}</span>` : ''}</div>`
     : '';
 
   const deadlineHtml = deadline
@@ -1278,6 +1355,7 @@ async function retryLoad() {
 /* ============================================================
    INIT
 ============================================================ */
+document.body.classList.add('app-mode'); /* モバイル時のみ media query 側で1画面レイアウトが有効化される */
 updateFavCountBadge();
 showScreen('screen-top');
 loadSources(); /* バックグラウンドで先読み */
