@@ -143,6 +143,7 @@ header {
 .quiz-opt:hover { border-color: var(--violet2); background: var(--soft); }
 .quiz-opt.selected { border-color: var(--violet); background: var(--soft); color: var(--violet); }
 .quiz-opt-icon { font-size: 20px; flex-shrink: 0; }
+.quiz-multi-actions { margin-top: 16px; text-align: center; }
 
 /* ===== RESULT ===== */
 #screen-result { padding: 40px 0 60px; text-align: center; }
@@ -358,29 +359,30 @@ header {
 
   /* ---- TOP ---- */
   body.app-mode #screen-top.active {
-    padding: 18px 0 22px;
-    justify-content: space-between;
+    padding: 20px 0 24px;
+    justify-content: space-evenly;
+    gap: 14px;
   }
-  body.app-mode .top-hero { padding: 26px 18px; margin-bottom: 0; border-radius: 20px; }
-  body.app-mode .top-hero-icon { font-size: 40px; margin-bottom: 8px; }
-  body.app-mode .top-hero-title { font-size: 19px; margin-bottom: 6px; }
+  body.app-mode .top-hero { padding: 34px 20px; margin-bottom: 0; border-radius: 22px; }
+  body.app-mode .top-hero-icon { font-size: 48px; margin-bottom: 10px; }
+  body.app-mode .top-hero-title { font-size: 21px; margin-bottom: 8px; }
   body.app-mode .top-hero-sub {
-    font-size: 12px; line-height: 1.6;
+    font-size: 12.5px; line-height: 1.7;
     display: -webkit-box; -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; overflow: hidden;
+    -webkit-line-clamp: 3; overflow: hidden;
   }
-  body.app-mode .top-features { display: flex; gap: 8px; margin-bottom: 0; }
-  body.app-mode .top-feature { flex: 1; min-width: 0; flex-direction: column; align-items: stretch; text-align: center; padding: 12px 6px; gap: 5px; border-radius: 14px; }
-  body.app-mode .top-feature-icon { font-size: 22px; }
+  body.app-mode .top-features { display: flex; gap: 10px; margin-bottom: 0; }
+  body.app-mode .top-feature { flex: 1; min-width: 0; flex-direction: column; align-items: stretch; text-align: center; padding: 17px 8px; gap: 8px; border-radius: 16px; }
+  body.app-mode .top-feature-icon { font-size: 27px; }
   body.app-mode .top-feature-text { min-width: 0; }
   body.app-mode .top-feature-text strong {
-    font-size: 11px; line-height: 1.3;
+    font-size: 12px; line-height: 1.35;
     white-space: normal; overflow-wrap: break-word;
   }
   body.app-mode .top-feature-text span { display: none; }
-  body.app-mode .top-cta .btn-primary { font-size: 15px; padding: 14px 34px; }
-  body.app-mode .top-cta-note { font-size: 11px; margin-top: 8px; }
-  body.app-mode .top-fav-link { margin-top: 10px; font-size: 12.5px; }
+  body.app-mode .top-cta .btn-primary { font-size: 16px; padding: 16px 38px; }
+  body.app-mode .top-cta-note { font-size: 11.5px; margin-top: 10px; }
+  body.app-mode .top-fav-link { margin-top: 12px; font-size: 13px; }
 
   /* ---- QUIZ ---- */
   body.app-mode #screen-quiz.active {
@@ -388,37 +390,41 @@ header {
   }
   body.app-mode .quiz-progress { flex-shrink: 0; margin-bottom: 16px; }
   body.app-mode .quiz-card {
-    flex: 1; min-height: 0;
+    flex: 0 1 auto; max-height: 100%; margin: auto 0;
     display: flex; flex-direction: column;
     padding: 24px 18px; border-radius: 18px;
+    overflow-y: auto;
   }
   body.app-mode .quiz-q { flex-shrink: 0; font-size: 15px; margin-bottom: 18px; line-height: 1.45; }
   body.app-mode .quiz-options {
-    flex: 1; min-height: 0;
-    grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(60px, 100px);
+    flex: 0 1 auto;
+    grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(70px, 118px);
     align-content: center; gap: 12px;
   }
-  body.app-mode .quiz-opt { padding: 12px 10px; font-size: 14px; gap: 8px; border-radius: 13px; }
-  body.app-mode .quiz-opt-icon { font-size: 21px; }
+  body.app-mode .quiz-options.few-options { grid-auto-rows: minmax(96px, 168px); }
+  body.app-mode .quiz-opt { padding: 14px 12px; font-size: 14.5px; gap: 10px; border-radius: 14px; }
+  body.app-mode .quiz-opt-icon { font-size: 22px; }
+  body.app-mode .quiz-multi-actions { flex-shrink: 0; margin-top: 18px; }
+  body.app-mode .quiz-multi-actions .btn-primary { font-size: 14px; padding: 12px 26px; }
 
   /* ---- RESULT ---- */
   body.app-mode #screen-result.active {
     padding: 18px 0 22px;
     justify-content: center;
-    gap: 18px;
+    gap: 22px;
   }
-  body.app-mode .result-card { padding: 28px 22px 24px; border-radius: 20px; margin-bottom: 0; }
-  body.app-mode .result-icon { font-size: 48px; margin-bottom: 10px; }
-  body.app-mode .result-label { font-size: 11px; margin-bottom: 6px; }
-  body.app-mode .result-type { font-size: 19px; margin-bottom: 10px; }
+  body.app-mode .result-card { padding: 34px 24px 30px; border-radius: 22px; margin-bottom: 0; }
+  body.app-mode .result-icon { font-size: 56px; margin-bottom: 12px; }
+  body.app-mode .result-label { font-size: 11px; margin-bottom: 8px; }
+  body.app-mode .result-type { font-size: 21px; margin-bottom: 12px; }
   body.app-mode .result-desc {
-    font-size: 13px; line-height: 1.6;
+    font-size: 13.5px; line-height: 1.7;
     display: -webkit-box; -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4; overflow: hidden;
+    -webkit-line-clamp: 5; overflow: hidden;
   }
   body.app-mode .result-grade-note { font-size: 12px; padding: 10px 12px; margin-top: 12px; }
-  body.app-mode .result-actions { gap: 10px; }
-  body.app-mode .result-actions .btn-primary { font-size: 15px; padding: 13px 30px; }
+  body.app-mode .result-actions { gap: 12px; }
+  body.app-mode .result-actions .btn-primary { font-size: 16px; padding: 15px 34px; }
 
   /* ---- SWIPE ---- */
   body.app-mode #screen-swipe.active { padding: 10px 0 10px; }
@@ -433,8 +439,9 @@ header {
     display: flex; flex-direction: column;
     min-height: 0;
   }
-  body.app-mode .card-header { flex-shrink: 0; }
+  body.app-mode .card-header { flex-shrink: 0; padding: 24px 24px 20px; }
   body.app-mode .card-title {
+    font-size: 20px;
     display: -webkit-box; -webkit-box-orient: vertical;
     -webkit-line-clamp: 2; overflow: hidden;
   }
@@ -442,17 +449,27 @@ header {
     flex: 1; min-height: 0;
     display: flex; flex-direction: column;
     justify-content: center;
+    padding: 22px 24px 22px;
     overflow-y: auto;
   }
   body.app-mode .card-badges,
   body.app-mode .card-tags,
   body.app-mode .card-deadline { flex-shrink: 0; }
+  body.app-mode .card-badges { margin-bottom: 16px; }
+  body.app-mode .badge { font-size: 12px; padding: 5px 12px; }
+  body.app-mode .card-tags { margin-bottom: 16px; }
+  body.app-mode .tag { font-size: 12px; padding: 4px 10px; }
   body.app-mode .card-gain {
     flex: 0 1 auto;
+    font-size: 15px; line-height: 1.75;
     display: -webkit-box; -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3; overflow: hidden;
+    -webkit-line-clamp: 4; overflow: hidden;
   }
-  body.app-mode .action-bar { flex-shrink: 0; margin-top: 10px; }
+  body.app-mode .card-deadline { margin-top: 18px; padding-top: 16px; font-size: 12.5px; }
+  body.app-mode .action-bar { flex-shrink: 0; margin-top: 12px; gap: 10px; }
+  body.app-mode .action-btn { padding: 17px 8px; border-radius: 18px; }
+  body.app-mode .action-btn .btn-icon { font-size: 25px; }
+  body.app-mode .action-btn .btn-label { font-size: 13px; }
   body.app-mode .swipe-sub-btns { flex-shrink: 0; margin-top: 8px; }
 
   /* ---- Modal (fav list / detail): keep own scroll, just tighten padding ---- */
@@ -575,7 +592,7 @@ header {
       <div class="quiz-card">
         <div class="quiz-q" id="quizQuestion"></div>
         <div class="quiz-options" id="quizOptions"></div>
-        <div id="quizMultiActions" style="display:none; margin-top:16px; text-align:center;">
+        <div id="quizMultiActions" class="quiz-multi-actions" style="display:none;">
           <button class="btn btn-primary" onclick="confirmMultiSelect()">次へ →</button>
         </div>
       </div>
@@ -1247,7 +1264,9 @@ function renderQuizStep() {
   document.getElementById('quizQuestion').textContent  = q.q;
 
   const selected = q.multi ? (quizAnswers[q.id] || []) : null;
-  document.getElementById('quizOptions').innerHTML = q.opts.map(opt => {
+  const optionsEl = document.getElementById('quizOptions');
+  optionsEl.classList.toggle('few-options', q.opts.length <= 3);
+  optionsEl.innerHTML = q.opts.map(opt => {
     const isSel = q.multi && selected.includes(opt.v);
     return `<button class="quiz-opt ${isSel ? 'selected' : ''}" onclick="selectOption('${q.id}','${opt.v}',this,${q.multi ? 'true' : 'false'})">
       <span class="quiz-opt-icon">${opt.icon}</span>${esc(opt.label)}
