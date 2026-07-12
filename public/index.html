@@ -510,7 +510,7 @@ header {
           <div class="top-feature-icon">🔍</div>
           <div class="top-feature-text">
             <strong>かんたん診断で絞り込み</strong>
-            <span>4つの質問に答えるだけで、あなたに合った機会が見つかります</span>
+            <span>6つの質問に答えるだけで、あなたに合った機会が見つかります</span>
           </div>
         </div>
         <div class="top-feature">
@@ -530,7 +530,7 @@ header {
       </div>
       <div class="top-cta">
         <button class="btn btn-primary" onclick="startQuiz()">診断をはじめる →</button>
-        <div class="top-cta-note">5問の質問に答えるとおすすめが表示されます</div>
+        <div class="top-cta-note">6問の質問に答えるとおすすめが表示されます</div>
         <button class="top-fav-link" onclick="openFavModal()">⭐ 気になるリストを見る</button>
       </div>
     </div>
@@ -570,11 +570,14 @@ header {
     <div class="screen" id="screen-quiz">
       <div class="quiz-progress">
         <div class="quiz-dots" id="quizDots"></div>
-        <div class="quiz-step-label" id="quizStepLabel">1 / 4</div>
+        <div class="quiz-step-label" id="quizStepLabel">1 / 6</div>
       </div>
       <div class="quiz-card">
         <div class="quiz-q" id="quizQuestion"></div>
         <div class="quiz-options" id="quizOptions"></div>
+        <div id="quizMultiActions" style="display:none; margin-top:16px; text-align:center;">
+          <button class="btn btn-primary" onclick="confirmMultiSelect()">次へ →</button>
+        </div>
       </div>
     </div>
 
@@ -685,168 +688,135 @@ header {
 /* ============================================================
    CONFIG
 ============================================================ */
-const API_URL   = 'https://gakuchika-source-db.vercel.app/api/sources';
+const RECOMMEND_API_URL = 'https://gakuchika-source-db.vercel.app/api/recommend-sources';
 const FAV_KEY   = 'challengeSwipeFavorites';
 const DRAG_THRESHOLD = 80;
 
 /* ============================================================
    STATE
 ============================================================ */
-let allSources    = [];
-let sources       = [];
-let currentIndex  = 0;
-let sourcesReady  = false;
-let sourcesError  = false;
+let sources        = [];
+let currentIndex   = 0;
+let lastResultType = null;
 
 /* Quiz */
 let quizStep      = 0;
 const quizAnswers = {};
-let diagType      = null;
-let diagArea      = 'any';
-let diagGrade     = 'other';
 
 /* ============================================================
    QUIZ DATA
+   ─ 通常版LP（ishikawa-challenge-match/public/index.html）の
+     QUESTIONS と質問文・選択肢・value・順番を一致させている
 ============================================================ */
 const QUESTIONS = [
   {
     id: 'grade',
-    q: 'あなたの現在の年次を教えてください',
+    q: 'いまの学年は？',
     opts: [
-      { v: 'g1',    label: '大学1年生',        icon: '🌱' },
-      { v: 'g2',    label: '大学2年生',        icon: '📗' },
-      { v: 'g3',    label: '大学3年生',        icon: '🎯' },
-      { v: 'g4',    label: '大学4年生',        icon: '🎓' },
-      { v: 'grad',  label: '大学院生',         icon: '🔬' },
-      { v: 'other', label: 'その他・社会人学生', icon: '💼' },
-    ]
-  },
-  {
-    id: 'field',
-    q: '興味がある分野はどれですか？',
-    opts: [
-      { v: 'area',      label: '地域課題・まちづくり',   icon: '🏙️' },
-      { v: 'it',        label: 'IT・アプリ開発',         icon: '💻' },
-      { v: 'planning',  label: '企画・マーケティング',   icon: '📊' },
-      { v: 'education', label: '教育・子ども',           icon: '📚' },
-      { v: 'business',  label: '起業・ビジネス',         icon: '🚀' },
-      { v: 'volunteer', label: 'ボランティア・社会貢献', icon: '🤝' },
-    ]
-  },
-  {
-    id: 'style',
-    q: 'どんな関わり方がしたいですか？',
-    opts: [
-      { v: 'intern',    label: '実務に近いインターン',  icon: '💼' },
-      { v: 'project',   label: 'プロジェクト型の活動',  icon: '🎯' },
-      { v: 'volunteer', label: 'ボランティア活動',       icon: '🤝' },
-      { v: 'event',     label: 'イベント・単発参加',    icon: '🎪' },
-    ]
-  },
-  {
-    id: 'value',
-    q: '特に大切にしたいことは？',
-    opts: [
-      { v: 'skill',   label: 'スキルアップ・実践経験', icon: '⚡' },
-      { v: 'region',  label: '地域への貢献',           icon: '🌱' },
-      { v: 'career',  label: '将来のキャリア形成',     icon: '🎓' },
-      { v: 'impact',  label: '社会的なインパクト',     icon: '✨' },
+      { v: '1', label: '大学1年',     icon: '🌱' },
+      { v: '2', label: '大学2年',     icon: '📗' },
+      { v: '3', label: '大学3年',     icon: '📘' },
+      { v: '4', label: '大学4年',     icon: '🎓' },
+      { v: '1', label: '専門・その他', icon: '✨' },
     ]
   },
   {
     id: 'area',
-    q: '活動エリアの希望は？',
+    q: 'どこで挑戦したい？',
     opts: [
-      { v: 'ishikawa', label: '石川',        icon: '⛩️' },
-      { v: 'toyama',   label: '富山',        icon: '🏔️' },
-      { v: 'fukui',    label: '福井',        icon: '🦕' },
-      { v: 'online',   label: 'オンライン可', icon: '🌐' },
-      { v: 'any',      label: 'こだわらない', icon: '✅' },
+      { v: '金沢',       label: '金沢エリア',        icon: '🏯' },
+      { v: '能登',       label: '能登エリア',        icon: '🌊' },
+      { v: '加賀',       label: '加賀エリア',        icon: '♨️' },
+      { v: 'オンライン', label: 'オンライン中心でOK', icon: '💻' },
+      { v: 'any',        label: 'どこでもOK',        icon: '🗾' },
+    ]
+  },
+  {
+    id: 'term',
+    q: 'どれくらい関われそう？',
+    opts: [
+      { v: '短期', label: '単発・短期でサクッと', icon: '⚡' },
+      { v: '長期', label: 'じっくり長期で',       icon: '🔁' },
+      { v: 'any',  label: 'どちらでも',           icon: '🤝' },
+    ]
+  },
+  {
+    id: 'reward',
+    q: '報酬はどうしたい？',
+    opts: [
+      { v: 'paid', label: 'できれば有給がいい', icon: '💰' },
+      { v: 'exp',  label: '無給でも経験重視',   icon: '🔥' },
+      { v: 'any',  label: 'どちらでもいい',     icon: '😌' },
+    ]
+  },
+  {
+    id: 'interest',
+    q: 'ワクワクするのはどれ？',
+    multi: true,
+    opts: [
+      { v: '地域',        label: '地域・まちづくり', icon: '🏔️' },
+      { v: '起業',        label: '起業・ビジネス',   icon: '🚀' },
+      { v: 'IT',          label: 'IT・ものづくり',   icon: '💻' },
+      { v: 'デザイン発信', label: 'デザイン・発信',   icon: '🎨' },
+      { v: '教育',        label: '教育・人を育てる', icon: '📣' },
+      { v: '環境社会',    label: '環境・社会課題',   icon: '🌱' },
+    ]
+  },
+  {
+    id: 'motive',
+    q: '挑戦する一番の理由は？',
+    opts: [
+      { v: 'grow',      label: '自分を成長させたい', icon: '📈' },
+      { v: 'connect',   label: '人とつながりたい',   icon: '🤝' },
+      { v: 'skill',     label: 'スキルが欲しい',     icon: '🛠️' },
+      { v: 'gakuchika', label: 'ガクチカが欲しい',   icon: '🎯' },
     ]
   },
 ];
 
 /* ============================================================
    DIAGNOSIS
+   ─ 通常版LPの TYPES（タイプ名・絵文字・説明文）と一致させている
+   ─ 並び替えは行わず、interest の先頭値でタイプ判定のみ行う
+     （通常版LPの topType() と同じロジック）
 ============================================================ */
-const DIAG_TYPES = {
-  it:        { label: 'IT課題解決タイプ',      icon: '💻', desc: 'テクノロジーで社会課題を解決することに情熱があるあなた。IT・エンジニアリング系のインターンやプロジェクトがおすすめです。' },
-  planning:  { label: '企画マーケタイプ',      icon: '📊', desc: 'アイデアを形にして人に届けることが得意なあなた。企画・マーケティング・広報系の挑戦機会がぴったりです。' },
-  business:  { label: '起業チャレンジタイプ',  icon: '🚀', desc: '自分のビジネスを作りたいというエネルギーがあるあなた。起業支援・スタートアップ系のプログラムが向いています。' },
-  area:      { label: '地域実践タイプ',        icon: '🏙️', desc: '地域に根ざした活動や地方創生に興味があるあなた。まちづくり・地域課題解決系のインターンがおすすめです。' },
-  education: { label: '教育サポートタイプ',    icon: '📚', desc: '次世代を育てることや教育に関心があるあなた。教育・子ども支援系のプログラムやボランティアが向いています。' },
-  volunteer: { label: '社会貢献タイプ',        icon: '🤝', desc: '社会をより良くしたいという気持ちを持つあなた。NPO・ボランティア・社会課題解決系の活動がおすすめです。' },
+const TYPES = {
+  "地域":        { name: "地域事業開発タイプ",       emoji: "🏔️", desc: "地域やまちの未来づくりにワクワクするあなた。現場に飛び込み、地域企業やプロジェクトで価値を生み出す挑戦が向いています。" },
+  "起業":        { name: "起業・スタートアップタイプ", emoji: "🚀", desc: "自分の手で何かを生み出したいあなた。0→1の事業づくりやビジネスコンテストで、アイデアを形にする挑戦が向いています。" },
+  "IT":          { name: "技術・ものづくりタイプ",     emoji: "💻", desc: "つくることが好きなあなた。エンジニア/デザインのインターンやハッカソンで、手を動かして成果物を残す挑戦が向いています。" },
+  "デザイン発信": { name: "発信・クリエイティブタイプ", emoji: "🎨", desc: "伝える・魅せるのが得意なあなた。マーケ/メディア/ブランディングの現場で、人の心を動かす挑戦が向いています。" },
+  "教育":        { name: "運営・リーダータイプ",       emoji: "🔥", desc: "人と関わり、巻き込むのが好きなあなた。教育・イベント運営・学生団体で、チームを動かす挑戦が向いています。" },
+  "環境社会":     { name: "社会課題・共創タイプ",       emoji: "🌱", desc: "社会をよくしたい想いが強いあなた。NPOや環境・地域の現場で、課題解決に挑む経験が向いています。" }
 };
 
-const TYPE_KWS = {
-  it:        ['IT', 'アプリ', 'プログラム', 'エンジニア', 'Web', 'web', 'デジタル', '開発', 'tech', 'Tech', 'システム', 'プログラミング'],
-  planning:  ['企画', 'マーケ', 'PR', 'プロモ', 'ブランド', '広報', 'SNS', 'コンテンツ', 'マーケティング'],
-  business:  ['起業', 'ビジネス', 'スタートアップ', '事業', 'アントレ', '経営'],
-  area:      ['地域', 'まちづくり', 'コミュニティ', '地方', '石川', '富山', '福井', '能登', '金沢', '地方創生'],
-  education: ['教育', '子ども', '学習', 'キッズ', 'こども', '学校', '先生', '塾'],
-  volunteer: ['ボランティア', '社会貢献', '福祉', 'NPO', 'NGO', '非営利', '社会課題'],
-};
-
-const AREA_KWS = {
-  ishikawa: ['石川', '金沢', '能登', '加賀', '輪島', '七尾', '小松'],
-  toyama:   ['富山', 'とやま'],
-  fukui:    ['福井', 'ふくい'],
-  online:   ['オンライン', 'リモート', '全国', 'remote', 'online', 'Zoom', 'zoom'],
-  any:      [],
-};
-
-/* 年次ごとの優先キーワード（スコア +1） */
-const GRADE_KWS = {
-  g1:    ['イベント', 'ボランティア', '体験', '短期', '初心者', '歓迎', '見学', '参加', '1日'],
-  g2:    ['プロジェクト', '地域活動', '実践', 'インターン', '短期', 'チーム', '地域'],
-  g3:    ['長期', 'インターン', '実務', '就活', 'キャリア', 'マーケティング', '開発', '実績'],
-  g4:    ['実務', '即戦力', '成果', '事業', '企画', '長期', 'プロジェクト'],
-  grad:  ['研究', '開発', '分析', '専門', 'DX', 'データ', 'AI', '調査', '実験'],
-  other: ['柔軟', '社会人', '経験', '副業', 'スキルアップ', '自由', '週末'],
-};
-
-/* 年次ごとの診断結果コメント */
-const GRADE_NOTES = {
-  g1:    'まずは短期・体験型の挑戦から始めやすい時期です。',
-  g2:    '実践型プロジェクトや地域活動で経験を積みやすい時期です。',
-  g3:    '就活や将来のキャリアに直結する実践経験を意識したい時期です。',
-  g4:    '卒業前に成果を出せる実践的な案件が向いています。',
-  grad:  '専門性を活かして、開発・調査・企画系の挑戦と相性が良いです。',
-  other: '経験を活かせる柔軟な案件を優先しています。',
-};
-
-function calcDiagType(ans) {
-  const f = ans.field || '';
-  if (f === 'it')        return 'it';
-  if (f === 'planning')  return 'planning';
-  if (f === 'business')  return 'business';
-  if (f === 'education') return 'education';
-  if (f === 'area' || ans.value === 'region') return 'area';
-  return 'volunteer';
+function topType() {
+  const ints = quizAnswers.interest || [];
+  if (ints.length === 0) return TYPES["地域"];
+  return TYPES[ints[0]] || TYPES["地域"];
 }
 
-function scoreSource(src, typeKws, areaKws, gradeKws) {
-  const text = [
-    src.title, src.name, src.type, src.category,
-    src.description, src.shortDescription, src.gain,
-    src.area, src.region, src.location,
-    ...(Array.isArray(src.tags) ? src.tags : []),
-    ...(Array.isArray(src.keywords) ? src.keywords : []),
-    ...(Array.isArray(src.regions) ? src.regions : []),
-  ].filter(Boolean).join(' ');
-  let s = 0;
-  for (const kw of typeKws)  { if (text.includes(kw)) s += 1; }
-  for (const kw of areaKws)  { if (text.includes(kw)) s += 2; }
-  for (const kw of gradeKws) { if (text.includes(kw)) s += 1; }
-  return s;
-}
-
-function sortSources(list, type, areaChoice, grade) {
-  const tKws = TYPE_KWS[type] || [];
-  const aKws = areaChoice === 'any' ? [] : (AREA_KWS[areaChoice] || []);
-  const gKws = GRADE_KWS[grade] || [];
-  if (!tKws.length && !aKws.length && !gKws.length) return list;
-  return [...list].sort((a, b) => scoreSource(b, tKws, aKws, gKws) - scoreSource(a, tKws, aKws, gKws));
+/* ============================================================
+   RECOMMEND-SOURCES RESPONSE NORMALIZATION
+   ─ 通常版LPの normalizeSourceItem() を踏襲した安全なパース
+============================================================ */
+function normalizeSourceItem(item, index) {
+  const tags    = Array.isArray(item.tags) ? item.tags : [];
+  const regions = Array.isArray(item.regions) ? item.regions : [];
+  const description = item.shortDescription || item.description || item.recommendationText || '';
+  return {
+    id:       item.id || item.sourceId || item._id || item.uuid || `reco-${index}`,
+    title:    item.title || item.name || '外部サイト',
+    org:      item.org || '',
+    cat:      item.category || '外部サイト',
+    area:     regions[0] || item.area || '全国',
+    tags,
+    grade:    ['1', '2', '3', '4'],
+    term:     item.term || 'any',
+    reward:   item.reward || '情報',
+    deadline: item.deadline || 'リンク先を確認',
+    gain:     item.recommendationText || description,
+    url:      item.url || '#',
+  };
 }
 
 /* ============================================================
@@ -1275,13 +1245,28 @@ function renderQuizStep() {
 
   document.getElementById('quizStepLabel').textContent = `${quizStep + 1} / ${total}`;
   document.getElementById('quizQuestion').textContent  = q.q;
-  document.getElementById('quizOptions').innerHTML = q.opts.map(opt => `
-    <button class="quiz-opt" onclick="selectOption('${q.id}','${opt.v}',this)">
+
+  const selected = q.multi ? (quizAnswers[q.id] || []) : null;
+  document.getElementById('quizOptions').innerHTML = q.opts.map(opt => {
+    const isSel = q.multi && selected.includes(opt.v);
+    return `<button class="quiz-opt ${isSel ? 'selected' : ''}" onclick="selectOption('${q.id}','${opt.v}',this,${q.multi ? 'true' : 'false'})">
       <span class="quiz-opt-icon">${opt.icon}</span>${esc(opt.label)}
-    </button>`).join('');
+    </button>`;
+  }).join('');
+
+  const multiActions = document.getElementById('quizMultiActions');
+  multiActions.style.display = q.multi ? '' : 'none';
 }
 
-function selectOption(qid, value, el) {
+function selectOption(qid, value, el, isMulti) {
+  if (isMulti) {
+    const arr = quizAnswers[qid] ? quizAnswers[qid].slice() : [];
+    const idx = arr.indexOf(value);
+    if (idx >= 0) arr.splice(idx, 1); else arr.push(value);
+    quizAnswers[qid] = arr;
+    el.classList.toggle('selected');
+    return; /* 複数選択は「次へ」ボタンで進む（自動遷移しない） */
+  }
   quizAnswers[qid] = value;
   document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
@@ -1292,85 +1277,63 @@ function selectOption(qid, value, el) {
   }, 260);
 }
 
+function confirmMultiSelect() {
+  const q = QUESTIONS[quizStep];
+  const arr = quizAnswers[q.id] || [];
+  if (arr.length === 0) { alert('1つ以上えらんでね！'); return; }
+  quizStep++;
+  if (quizStep < QUESTIONS.length) renderQuizStep();
+  else showResult();
+}
+
 function showResult() {
-  diagType  = calcDiagType(quizAnswers);
-  diagArea  = quizAnswers.area  || 'any';
-  diagGrade = quizAnswers.grade || 'other';
-  const t = DIAG_TYPES[diagType];
-  document.getElementById('resultIcon').textContent = t.icon;
-  document.getElementById('resultType').textContent = t.label;
-  document.getElementById('resultDesc').textContent = t.desc;
-  const noteEl  = document.getElementById('resultGradeNote');
-  const noteText = GRADE_NOTES[diagGrade] || '';
-  if (noteText) {
-    noteEl.textContent = '💡 ' + noteText;
-    noteEl.style.display = '';
-  } else {
-    noteEl.style.display = 'none';
-  }
+  const T = topType();
+  lastResultType = T;
+  document.getElementById('resultIcon').textContent = T.emoji;
+  document.getElementById('resultType').textContent = T.name;
+  document.getElementById('resultDesc').textContent = T.desc;
+  document.getElementById('resultGradeNote').style.display = 'none';
   showScreen('screen-result');
 }
 
 /* ============================================================
    GO TO SWIPE
+   ─ answers を /api/recommend-sources にPOSTし、
+     返却された配列順をそのままスワイプカード順として使う
+     （通常版LPの loadSourceRecommendations() と同じ連携方式）
+   ─ 失敗時・0件時はダミーを出さず error / empty 画面を表示
 ============================================================ */
-async function goToSwipe() {
-  if (!sourcesReady && !sourcesError) {
-    showScreen('screen-loading');
-    await waitForSources();
-  }
-  if (sourcesError)          { showScreen('screen-error'); return; }
-  if (!allSources.length)    { showScreen('screen-empty'); return; }
-  sources      = sortSources(allSources, diagType || 'volunteer', diagArea || 'any', diagGrade || 'other');
-  currentIndex = 0;
-  renderCard(sources[0], 0, sources.length);
-  showScreen('screen-swipe');
-}
-
-function waitForSources() {
-  return new Promise(resolve => {
-    const check = () => (sourcesReady || sourcesError) ? resolve() : setTimeout(check, 100);
-    check();
-  });
-}
-
-/* ============================================================
-   API LOAD
-   ─ /api/sources GET のみ使用
-   ─ 失敗時はダミーを出さない
-   ─ 0件時は掲載準備中を表示
-============================================================ */
-async function loadSources() {
+async function fetchAndShowRecommendations() {
+  showScreen('screen-loading');
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(RECOMMEND_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        diagnosisType: lastResultType && lastResultType.name ? lastResultType.name : '',
+        studentType:   lastResultType && lastResultType.name ? lastResultType.name : '',
+        grade:      quizAnswers.grade || '',
+        answers:    { ...quizAnswers },
+        interests:  Array.isArray(quizAnswers.interest) ? quizAnswers.interest : []
+      })
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    let list = [];
-    if (Array.isArray(data))                       list = data;
-    else if (data && Array.isArray(data.sources))  list = data.sources;
-    else if (data && Array.isArray(data.data))     list = data.data;
-    else if (data && typeof data === 'object') {
-      const found = Object.values(data).find(v => Array.isArray(v));
-      if (found) list = found;
-    }
-    allSources   = list;
-    sourcesReady = true;
+    const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
+    if (recommendations.length === 0) { showScreen('screen-empty'); return; }
+    sources      = recommendations.map((item, index) => normalizeSourceItem(item, index));
+    currentIndex = 0;
+    renderCard(sources[0], 0, sources.length);
+    showScreen('screen-swipe');
   } catch (err) {
     /* API失敗 → ダミーデータは出さない */
-    console.error('[swipe-lp] API error:', err);
-    sourcesError = true;
+    console.error('[swipe-lp] recommend-sources API error:', err);
+    showScreen('screen-error');
   }
 }
 
-async function retryLoad() {
-  sourcesReady = false;
-  sourcesError = false;
-  allSources   = [];
-  await loadSources();
-  if (sourcesError)       { showScreen('screen-error'); return; }
-  if (!allSources.length) { showScreen('screen-empty'); return; }
-  showScreen('screen-top');
-}
+function goToSwipe() { fetchAndShowRecommendations(); }
+function retryLoad()  { fetchAndShowRecommendations(); }
 
 /* ============================================================
    INIT
@@ -1378,7 +1341,6 @@ async function retryLoad() {
 document.body.classList.add('app-mode'); /* モバイル時のみ media query 側で1画面レイアウトが有効化される */
 updateFavCountBadge();
 showScreen('screen-top');
-loadSources(); /* バックグラウンドで先読み */
 </script>
 </body>
 </html>
