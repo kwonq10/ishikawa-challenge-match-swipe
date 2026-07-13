@@ -621,10 +621,10 @@ header {
         </div>
         <div class="progress-label" id="progressLabel">— / —</div>
       </div>
-      <p class="swipe-hint-bar">← スキップ ｜ ドラッグまたはボタンで操作 ｜ 気になる →</p>
+      <p class="swipe-hint-bar">← 前のカードへ ｜ ドラッグまたはボタンで操作 ｜ 次へ →</p>
       <div class="card-stage">
-        <div class="drag-hint hint-skip" id="hintSkip">⏭<br>スキップ</div>
-        <div class="drag-hint hint-fav"  id="hintFav">⭐<br>気になる</div>
+        <div class="drag-hint hint-skip" id="hintSkip">↩<br>前へ戻る</div>
+        <div class="drag-hint hint-fav"  id="hintFav">➡<br>次へ</div>
         <div class="swipe-card" id="mainCard"></div>
       </div>
       <div class="action-bar">
@@ -1023,9 +1023,13 @@ function onDragEnd(e) {
   const dx = dragCurrentX;
   dragCurrentX = 0;
   if (dx > DRAG_THRESHOLD) {
-    doSwipeAnimate(this, 'right');
+    doSwipeAnimate(this, 'right', 'skip');
   } else if (dx < -DRAG_THRESHOLD) {
-    doSwipeAnimate(this, 'left');
+    if (currentIndex <= 0) {
+      bounceCard(this);
+    } else {
+      doSwipeAnimate(this, 'left', 'back');
+    }
   } else {
     this.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)';
     this.style.transform  = '';
@@ -1060,18 +1064,24 @@ function setHintOpacity(dx) {
   }
 }
 
-function doSwipeAnimate(card, dir) {
+function doSwipeAnimate(card, dir, action) {
   const tx  = dir === 'right' ? '130%' : '-130%';
   const rot = dir === 'right' ? '18deg' : '-18deg';
   card.style.transition = 'transform .32s ease, opacity .32s ease';
   card.style.transform  = `translateX(${tx}) rotate(${rot})`;
   card.style.opacity    = '0';
-  if (dir === 'right' && sources.length) {
+  if (action === 'fav' && sources.length) {
     const added = toggleFavById(sources[currentIndex]);
     updateFavBtn(added);
     updateFavCountBadge();
   }
-  setTimeout(advanceCard, 320);
+  setTimeout(action === 'back' ? goBackCard : advanceCard, 320);
+}
+
+function bounceCard(card) {
+  card.style.transition = 'transform .3s cubic-bezier(.34,1.56,.64,1)';
+  card.style.transform  = '';
+  setTimeout(() => { card.style.transition = ''; }, 300);
 }
 
 /* ============================================================
@@ -1093,25 +1103,28 @@ document.addEventListener('keydown', e => {
 ============================================================ */
 function doSkip() {
   const card = document.getElementById('mainCard');
-  if (card && sources.length) doSwipeAnimate(card, 'left');
+  if (card && sources.length) doSwipeAnimate(card, 'left', 'skip');
 }
 
 function doFavKey() {
   const card = document.getElementById('mainCard');
-  if (card && sources.length) doSwipeAnimate(card, 'right');
+  if (card && sources.length) doSwipeAnimate(card, 'right', 'fav');
 }
 
 function toggleFavCard() {
-  if (!sources.length) return;
-  const added = toggleFavById(sources[currentIndex]);
-  updateFavBtn(added);
-  updateFavCountBadge();
+  const card = document.getElementById('mainCard');
+  if (card && sources.length) doSwipeAnimate(card, 'right', 'fav');
 }
 
 function advanceCard() {
   currentIndex++;
   if (currentIndex >= sources.length) showDone();
   else renderCard(sources[currentIndex], currentIndex, sources.length);
+}
+
+function goBackCard() {
+  currentIndex = Math.max(0, currentIndex - 1);
+  renderCard(sources[currentIndex], currentIndex, sources.length);
 }
 
 function showDone() {
