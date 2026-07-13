@@ -1033,18 +1033,14 @@ function onDragEnd(e) {
   const dx = e.clientX - dragStartX;
   dragCurrentX = 0;
   if (dx < -DRAG_THRESHOLD) {
-    debugLogSwipeAction(dx, 'next/left');
     doSwipeAnimate(this, 'left', 'skip');
   } else if (dx > DRAG_THRESHOLD) {
     if (currentIndex <= 0) {
-      debugLogSwipeAction(dx, 'bounce/first-card');
       bounceCard(this);
     } else {
-      debugLogSwipeAction(dx, 'back/right');
       doSwipeAnimate(this, 'right', 'back');
     }
   } else {
-    debugLogSwipeAction(dx, 'snapback/none');
     this.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)';
     this.style.transform  = '';
     setTimeout(() => { this.style.transition = ''; }, 300);
@@ -1090,7 +1086,6 @@ function doSwipeAnimate(card, dir, action) {
     const added = toggleFavById(sources[currentIndex]);
     updateFavBtn(added);
     updateFavCountBadge();
-    debugLogFavCall('button');
   }
   setTimeout(() => {
     try {
@@ -1145,61 +1140,11 @@ function advanceCard() {
   currentIndex++;
   if (currentIndex >= sources.length) showDone();
   else renderCard(sources[currentIndex], currentIndex, sources.length);
-  renderDebugOverlay();
 }
 
 function goBackCard() {
   currentIndex = Math.max(0, currentIndex - 1);
   renderCard(sources[currentIndex], currentIndex, sources.length);
-  renderDebugOverlay();
-}
-
-/* ============================================================
-   DEBUG OVERLAY (?debug=1 のときだけ表示。通常URLでは非表示)
-============================================================ */
-const DEBUG_BUILD    = 'swipe-inverted-v1';
-const debugEnabled   = new URLSearchParams(location.search).get('debug') === '1';
-const debugState     = {
-  lastDx: null,
-  lastAction: 'none',
-  lastSaveSource: 'none',
-  favCallCounts: { button: 0, modal: 0, swipe: 0 },
-};
-
-function debugLogSwipeAction(dx, action) {
-  if (!debugEnabled) return;
-  debugState.lastDx = Math.round(dx);
-  debugState.lastAction = action;
-  renderDebugOverlay();
-}
-
-function debugLogFavCall(source) {
-  if (!debugEnabled) return;
-  debugState.lastSaveSource = source;
-  debugState.favCallCounts[source] = (debugState.favCallCounts[source] || 0) + 1;
-  renderDebugOverlay();
-}
-
-function renderDebugOverlay() {
-  if (!debugEnabled) return;
-  let el = document.getElementById('debugOverlay');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'debugOverlay';
-    el.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;'
-      + 'background:rgba(0,0,0,.85);color:#39ff6a;font:11px/1.6 ui-monospace,monospace;'
-      + 'padding:8px 12px;white-space:pre-wrap;pointer-events:none;'
-      + 'max-height:40vh;overflow-y:auto;';
-    document.body.appendChild(el);
-  }
-  el.textContent =
-    `build: ${DEBUG_BUILD}\n` +
-    `currentIndex: ${currentIndex}\n` +
-    `last dx: ${debugState.lastDx}\n` +
-    `last action: ${debugState.lastAction}\n` +
-    `fav count: ${loadFavs().length}\n` +
-    `last save source: ${debugState.lastSaveSource}\n` +
-    `fav calls -> button:${debugState.favCallCounts.button} modal:${debugState.favCallCounts.modal} swipe:${debugState.favCallCounts.swipe}`;
 }
 
 function showDone() {
@@ -1289,7 +1234,6 @@ function toggleFavInModal() {
   updateFavBtn(added);
   updateFavCountBadge();
   updateDetailFavBtn();
-  debugLogFavCall('modal');
 }
 
 /* ============================================================
@@ -1458,7 +1402,6 @@ function retryLoad()  { fetchAndShowRecommendations(); }
 document.body.classList.add('app-mode'); /* モバイル時のみ media query 側で1画面レイアウトが有効化される */
 updateFavCountBadge();
 showScreen('screen-top');
-renderDebugOverlay();
 </script>
 </body>
 </html>
