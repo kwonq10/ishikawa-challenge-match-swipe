@@ -121,17 +121,18 @@ header {
 }
 .quiz-dots { display: flex; gap: 6px; }
 .quiz-dot {
-  width: 8px; height: 8px; border-radius: 50%;
+  width: 9px; height: 9px; border-radius: 50%;
   background: var(--line); transition: .3s;
 }
-.quiz-dot.active { background: var(--violet); width: 24px; border-radius: 4px; }
+.quiz-dot.active { background: var(--violet); width: 28px; border-radius: 4px; }
 .quiz-dot.done { background: var(--violet2); }
-.quiz-step-label { font-size: 12px; color: var(--muted); font-weight: 700; }
+.quiz-step-label { font-size: 13px; color: var(--muted); font-weight: 700; }
 .quiz-card {
   background: #fff; border: 1px solid var(--line);
   border-radius: 22px; padding: 28px 24px; box-shadow: var(--shadow);
 }
-.quiz-q { font-size: 17px; font-weight: 900; margin-bottom: 20px; line-height: 1.5; }
+.quiz-q { font-size: 17px; font-weight: 900; margin-bottom: 8px; line-height: 1.5; }
+.quiz-note { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 18px; line-height: 1.5; }
 .quiz-options { display: grid; gap: 9px; }
 .quiz-opt {
   display: flex; align-items: center; gap: 12px;
@@ -236,8 +237,8 @@ header {
 .action-btn {
   border: none; cursor: pointer; font-family: inherit;
   font-weight: 800; font-size: 15px; border-radius: 16px;
-  padding: 15px 10px; display: flex; flex-direction: column;
-  align-items: center; gap: 4px;
+  padding: 16px 14px; display: flex; flex-direction: row;
+  align-items: center; justify-content: center; gap: 10px;
   transition: transform .18s ease, box-shadow .18s ease;
 }
 .action-btn:active { transform: scale(.97); }
@@ -371,12 +372,12 @@ header {
     display: -webkit-box; -webkit-box-orient: vertical;
     -webkit-line-clamp: 3; overflow: hidden;
   }
-  body.app-mode .top-features { display: flex; gap: 10px; margin-bottom: 0; }
-  body.app-mode .top-feature { flex: 1; min-width: 0; flex-direction: column; align-items: stretch; text-align: center; padding: 17px 8px; gap: 8px; border-radius: 16px; }
-  body.app-mode .top-feature-icon { font-size: 27px; }
+  body.app-mode .top-features { display: flex; gap: 12px; margin-bottom: 0; }
+  body.app-mode .top-feature { flex: 1; min-width: 0; flex-direction: column; align-items: stretch; text-align: center; padding: 24px 10px; gap: 10px; border-radius: 18px; }
+  body.app-mode .top-feature-icon { font-size: 34px; }
   body.app-mode .top-feature-text { min-width: 0; }
   body.app-mode .top-feature-text strong {
-    font-size: 12px; line-height: 1.35;
+    font-size: 13.5px; line-height: 1.4;
     white-space: normal; overflow-wrap: break-word;
   }
   body.app-mode .top-feature-text span { display: none; }
@@ -395,15 +396,16 @@ header {
     padding: 24px 18px; border-radius: 18px;
     overflow-y: auto;
   }
-  body.app-mode .quiz-q { flex-shrink: 0; font-size: 15px; margin-bottom: 18px; line-height: 1.45; }
+  body.app-mode .quiz-q { flex-shrink: 0; font-size: 15px; margin-bottom: 6px; line-height: 1.45; }
+  body.app-mode .quiz-note { flex-shrink: 0; font-size: 12.5px; margin-bottom: 16px; }
   body.app-mode .quiz-options {
     flex: 0 1 auto;
-    grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(70px, 118px);
-    align-content: center; gap: 12px;
+    grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(84px, 138px);
+    align-content: center; gap: 14px;
   }
-  body.app-mode .quiz-options.few-options { grid-auto-rows: minmax(96px, 168px); }
-  body.app-mode .quiz-opt { padding: 14px 12px; font-size: 14.5px; gap: 10px; border-radius: 14px; }
-  body.app-mode .quiz-opt-icon { font-size: 22px; }
+  body.app-mode .quiz-options.few-options { grid-auto-rows: minmax(110px, 184px); }
+  body.app-mode .quiz-opt { padding: 17px 14px; font-size: 15.5px; gap: 11px; border-radius: 16px; }
+  body.app-mode .quiz-opt-icon { font-size: 25px; }
   body.app-mode .quiz-multi-actions { flex-shrink: 0; margin-top: 18px; }
   body.app-mode .quiz-multi-actions .btn-primary { font-size: 14px; padding: 12px 26px; }
 
@@ -466,10 +468,10 @@ header {
     -webkit-line-clamp: 4; overflow: hidden;
   }
   body.app-mode .card-deadline { margin-top: 18px; padding-top: 16px; font-size: 12.5px; }
-  body.app-mode .action-bar { flex-shrink: 0; margin-top: 12px; gap: 10px; }
-  body.app-mode .action-btn { padding: 17px 8px; border-radius: 18px; }
-  body.app-mode .action-btn .btn-icon { font-size: 25px; }
-  body.app-mode .action-btn .btn-label { font-size: 13px; }
+  body.app-mode .action-bar { flex-shrink: 0; margin-top: 14px; gap: 12px; }
+  body.app-mode .action-btn { padding: 20px 14px; border-radius: 18px; gap: 10px; }
+  body.app-mode .action-btn .btn-icon { font-size: 24px; }
+  body.app-mode .action-btn .btn-label { font-size: 14.5px; }
   body.app-mode .swipe-sub-btns { flex-shrink: 0; margin-top: 8px; }
 
   /* ---- Modal (fav list / detail): keep own scroll, just tighten padding ---- */
@@ -591,6 +593,7 @@ header {
       </div>
       <div class="quiz-card">
         <div class="quiz-q" id="quizQuestion"></div>
+        <div class="quiz-note" id="quizNote"></div>
         <div class="quiz-options" id="quizOptions"></div>
         <div id="quizMultiActions" class="quiz-multi-actions" style="display:none;">
           <button class="btn btn-primary" onclick="confirmMultiSelect()">次へ →</button>
@@ -729,6 +732,7 @@ const QUESTIONS = [
   {
     id: 'grade',
     q: 'いまの学年は？',
+    note: '今のあなたに近いものを選んでください',
     opts: [
       { v: '1', label: '大学1年',     icon: '🌱' },
       { v: '2', label: '大学2年',     icon: '📗' },
@@ -740,6 +744,7 @@ const QUESTIONS = [
   {
     id: 'area',
     q: 'どこで挑戦したい？',
+    note: '活動しやすい場所を選んでください',
     opts: [
       { v: '金沢',       label: '金沢エリア',        icon: '🏯' },
       { v: '能登',       label: '能登エリア',        icon: '🌊' },
@@ -751,6 +756,7 @@ const QUESTIONS = [
   {
     id: 'term',
     q: 'どれくらい関われそう？',
+    note: '無理なく続けられる期間でOKです',
     opts: [
       { v: '短期', label: '単発・短期でサクッと', icon: '⚡' },
       { v: '長期', label: 'じっくり長期で',       icon: '🔁' },
@@ -760,6 +766,7 @@ const QUESTIONS = [
   {
     id: 'reward',
     q: '報酬はどうしたい？',
+    note: '本音に近いものを選んでください',
     opts: [
       { v: 'paid', label: 'できれば有給がいい', icon: '💰' },
       { v: 'exp',  label: '無給でも経験重視',   icon: '🔥' },
@@ -769,6 +776,7 @@ const QUESTIONS = [
   {
     id: 'interest',
     q: 'ワクワクするのはどれ？',
+    note: '気になるものを1つ以上選んでください',
     multi: true,
     opts: [
       { v: '地域',        label: '地域・まちづくり', icon: '🏔️' },
@@ -782,6 +790,7 @@ const QUESTIONS = [
   {
     id: 'motive',
     q: '挑戦する一番の理由は？',
+    note: 'いちばん近い目的を選んでください',
     opts: [
       { v: 'grow',      label: '自分を成長させたい', icon: '📈' },
       { v: 'connect',   label: '人とつながりたい',   icon: '🤝' },
@@ -984,6 +993,7 @@ function esc(str) {
 let dragStartX   = 0;
 let dragCurrentX = 0;
 let isDragging   = false;
+let cardBusy     = false;
 
 function attachDragHandlers() {
   const card = document.getElementById('mainCard');
@@ -995,7 +1005,7 @@ function attachDragHandlers() {
 }
 
 function onDragStart(e) {
-  if (isDragging) return;
+  if (isDragging || cardBusy) return;
   if (e.pointerType === 'mouse' && e.button !== 0) return;
   isDragging   = true;
   dragStartX   = e.clientX;
@@ -1065,6 +1075,8 @@ function setHintOpacity(dx) {
 }
 
 function doSwipeAnimate(card, dir, action) {
+  if (cardBusy) return;
+  cardBusy = true;
   const tx  = dir === 'right' ? '130%' : '-130%';
   const rot = dir === 'right' ? '18deg' : '-18deg';
   card.style.transition = 'transform .32s ease, opacity .32s ease';
@@ -1075,13 +1087,18 @@ function doSwipeAnimate(card, dir, action) {
     updateFavBtn(added);
     updateFavCountBadge();
   }
-  setTimeout(action === 'back' ? goBackCard : advanceCard, 320);
+  setTimeout(() => {
+    if (action === 'back') goBackCard(); else advanceCard();
+    cardBusy = false;
+  }, 320);
 }
 
 function bounceCard(card) {
+  if (cardBusy) return;
+  cardBusy = true;
   card.style.transition = 'transform .3s cubic-bezier(.34,1.56,.64,1)';
   card.style.transform  = '';
-  setTimeout(() => { card.style.transition = ''; }, 300);
+  setTimeout(() => { card.style.transition = ''; cardBusy = false; }, 300);
 }
 
 /* ============================================================
@@ -1193,7 +1210,7 @@ function openDetail() {
         <div class="detail-val">${esc(r.val)}</div>
       </div>`).join('')}
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="toggleFavCard();updateDetailFavBtn()">
+      <button class="btn btn-primary" onclick="toggleFavInModal()">
         ${isFaved(src) ? '✅ 保存済み' : '⭐ 気になる'}
       </button>
       ${url ? `<a class="btn btn-ghost" href="${esc(url)}" target="_blank" rel="noopener noreferrer">公式サイト →</a>` : ''}
@@ -1206,6 +1223,14 @@ function updateDetailFavBtn() {
   if (!sources.length) return;
   const btn = document.querySelector('#modal-detail .modal-actions .btn-primary');
   if (btn) btn.textContent = isFaved(sources[currentIndex]) ? '✅ 保存済み' : '⭐ 気になる';
+}
+
+function toggleFavInModal() {
+  if (!sources.length) return;
+  const added = toggleFavById(sources[currentIndex]);
+  updateFavBtn(added);
+  updateFavCountBadge();
+  updateDetailFavBtn();
 }
 
 /* ============================================================
@@ -1275,6 +1300,7 @@ function renderQuizStep() {
 
   document.getElementById('quizStepLabel').textContent = `${quizStep + 1} / ${total}`;
   document.getElementById('quizQuestion').textContent  = q.q;
+  document.getElementById('quizNote').textContent      = q.note || '';
 
   const selected = q.multi ? (quizAnswers[q.id] || []) : null;
   const optionsEl = document.getElementById('quizOptions');
