@@ -1030,7 +1030,7 @@ function onDragEnd(e) {
   this.classList.remove('dragging');
   try { this.releasePointerCapture(e.pointerId); } catch (err) {}
   setHintOpacity(0);
-  const dx = dragCurrentX;
+  const dx = e.clientX - dragStartX;
   dragCurrentX = 0;
   if (dx > DRAG_THRESHOLD) {
     doSwipeAnimate(this, 'right', 'skip');
@@ -1088,8 +1088,11 @@ function doSwipeAnimate(card, dir, action) {
     updateFavCountBadge();
   }
   setTimeout(() => {
-    if (action === 'back') goBackCard(); else advanceCard();
-    cardBusy = false;
+    try {
+      if (action === 'back') goBackCard(); else advanceCard();
+    } finally {
+      cardBusy = false;
+    }
   }, 320);
 }
 
