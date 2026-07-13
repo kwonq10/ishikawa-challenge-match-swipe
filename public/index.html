@@ -624,10 +624,10 @@ header {
         </div>
         <div class="progress-label" id="progressLabel">— / —</div>
       </div>
-      <p class="swipe-hint-bar">← 前のカードへ ｜ ドラッグまたはボタンで操作 ｜ 次へ →</p>
+      <p class="swipe-hint-bar">← 次へ ｜ ドラッグまたはボタンで操作 ｜ 戻る →</p>
       <div class="card-stage">
-        <div class="drag-hint hint-skip" id="hintSkip">↩<br>前へ戻る</div>
-        <div class="drag-hint hint-fav"  id="hintFav">➡<br>次へ</div>
+        <div class="drag-hint hint-skip" id="hintSkip">➡<br>次へ</div>
+        <div class="drag-hint hint-fav"  id="hintFav">↩<br>戻る</div>
         <div class="swipe-card" id="mainCard"></div>
       </div>
       <div class="action-bar">
@@ -1032,16 +1032,16 @@ function onDragEnd(e) {
   setHintOpacity(0);
   const dx = e.clientX - dragStartX;
   dragCurrentX = 0;
-  if (dx > DRAG_THRESHOLD) {
-    debugLogSwipeAction(dx, 'skip/right');
-    doSwipeAnimate(this, 'right', 'skip');
-  } else if (dx < -DRAG_THRESHOLD) {
+  if (dx < -DRAG_THRESHOLD) {
+    debugLogSwipeAction(dx, 'next/left');
+    doSwipeAnimate(this, 'left', 'skip');
+  } else if (dx > DRAG_THRESHOLD) {
     if (currentIndex <= 0) {
       debugLogSwipeAction(dx, 'bounce/first-card');
       bounceCard(this);
     } else {
-      debugLogSwipeAction(dx, 'back/left');
-      doSwipeAnimate(this, 'left', 'back');
+      debugLogSwipeAction(dx, 'back/right');
+      doSwipeAnimate(this, 'right', 'back');
     }
   } else {
     debugLogSwipeAction(dx, 'snapback/none');
@@ -1133,12 +1133,12 @@ function doSkip() {
 
 function doFavKey() {
   const card = document.getElementById('mainCard');
-  if (card && sources.length) doSwipeAnimate(card, 'right', 'fav');
+  if (card && sources.length) doSwipeAnimate(card, 'left', 'fav');
 }
 
 function toggleFavCard() {
   const card = document.getElementById('mainCard');
-  if (card && sources.length) doSwipeAnimate(card, 'right', 'fav');
+  if (card && sources.length) doSwipeAnimate(card, 'left', 'fav');
 }
 
 function advanceCard() {
@@ -1157,7 +1157,7 @@ function goBackCard() {
 /* ============================================================
    DEBUG OVERLAY (?debug=1 のときだけ表示。通常URLでは非表示)
 ============================================================ */
-const DEBUG_BUILD    = 'd668536-debug';
+const DEBUG_BUILD    = 'swipe-inverted-v1';
 const debugEnabled   = new URLSearchParams(location.search).get('debug') === '1';
 const debugState     = {
   lastDx: null,
